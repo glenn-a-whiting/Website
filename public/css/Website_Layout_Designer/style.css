@@ -35,16 +35,46 @@
 	transform: translate(0%,0%);
 }
 
+.options-top-center {
+	top: 0%;
+	left: 50%;
+	transform: translate(-50%, 0%);
+}
+
 .options-top-right {
 	top: 0%;
 	left: 100%;
 	transform: translate(-100%,0%);
 }
 
+.options-center-left {
+	top: 50%;
+	left: 0%;
+	transform: translate(0%, -50%);
+}
+
+.options-center {
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.options-center-right {
+	top: 50%;
+	left: 100%;
+	transform: translate(-100%, -50%);
+}
+
 .options-bottom-right {
 	top: 100%;
 	left: 100%;
 	transform: translate(-100%,-100%);
+}
+
+.options-bottom-center {
+	top: 100%;
+	left: 50%;
+	transform: translate(-50%, -100%);
 }
 
 .options-bottom-left {

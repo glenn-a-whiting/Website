@@ -22,10 +22,17 @@ var menuOptions = {
 	"Move Menu":[
 		[
 			{"label": "Top Left", "extra-classes": "", "extra-attributes":{}, "onclick": "optionsLocation('tl')", "value": "", "tooltip": "", "input-type": null},
+			{"label": "Top Center", "extra-classes": "", "extra-attributes":{}, "onclick": "optionsLocation('tc')", "value": "", "tooltip": "", "input-type": null},
 			{"label": "Top Right", "extra-classes": "", "extra-attributes":{}, "onclick": "optionsLocation('tr')", "value": "", "tooltip": "", "input-type": null}
 		],
 		[
+			{"label": "Center Left", "extra-classes": "", "extra-attributes":{}, "onclick": "optionsLocation('cl')", "value": "", "tooltip": "", "input-type": null},
+			{"label": "Center", "extra-classes": "", "extra-attributes":{}, "onclick": "optionsLocation('c')", "value": "", "tooltip": "", "input-type": null},
+			{"label": "Center Right", "extra-classes": "", "extra-attributes":{}, "onclick": "optionsLocation('cr')", "value": "", "tooltip": "", "input-type": null}
+		]
+		[
 			{"label": "Bottom Left", "extra-classes": "", "extra-attributes":{}, "onclick": "optionsLocation('bl')", "value": "", "tooltip": "", "input-type": null},
+			{"label": "Bottom Center", "extra-classes": "", "extra-attributes":{}, "onclick": "optionsLocation('bc')", "value": "", "tooltip": "", "input-type": null},
 			{"label": "Bottom Right", "extra-classes": "", "extra-attributes":{}, "onclick": "optionsLocation('br')", "value": "", "tooltip": "", "input-type": null}
 		]
 	],
@@ -128,56 +135,56 @@ function afterLoad(element){
 
 function generateOptions(){
 	var root = document.getElementById("options");
-	
+
 	var navPills = document.createElement("UL");
 	navPills.className = "nav nav-pills";
 	Object.keys(menuOptions).forEach((Category, index) => {
 		var li = document.createElement("LI");
 		if(index === 0) li.className = "active";
-		
+
 		var li_a = document.createElement("A");
 		li_a.setAttribute("data-toggle","pill");
 		li_a.setAttribute("href","#option-pane-"+Category.replace(" ","_")); //option-pane-[Category]
 		li_a.innerHTML = Category;
-		
+
 		li.appendChild(li_a);
 		navPills.appendChild(li);
-		
+
 	});
 	root.appendChild(navPills);
-	
+
 	var tabContent = document.createElement("DIV");
 	tabContent.className = "tab-content";
 	Object.keys(menuOptions).forEach((Category, index) => {
 		var menu = menuOptions[Category];
-		
+
 		var tabPane = document.createElement("DIV");
 		tabPane.className = "tab-pane fade" + (index === 0 ? " in active" : "");
 		tabPane.id = "option-pane-"+Category.replace(" ","_");
-				
+
 		var row = document.createElement("DIV");
 		row.className = "row";
-		
+
 		var textCenter = document.createElement("DIV");
 		textCenter.className = "text-center";
-		
+
 		var listGroup = document.createElement("DIV");
 		listGroup.className = "list-group";
-		
+
 		var heading = document.createElement("A");
 		heading.className = "list-group-item list-group-item-info btn";
 		heading.setAttribute("onclick","toggleSiblings(this)");
 		heading.setAttribute("href","#");
 		heading.textContent = Category;
 		listGroup.appendChild(heading);
-		
+
 		menu.forEach(menuRow => {
 			let mr = document.createElement("DIV");
 			mr.className = "row";
-				
+
 			let cf = document.createElement("DIV");
 			cf.className = "container-fluid";
-			
+
 			menuRow.forEach(menuButton => {
 				var commandBtn;
 				if(menuButton["input-type"] == null){
@@ -211,11 +218,11 @@ function generateOptions(){
 				commandBtn.setAttribute("value",menuButton.value);
 				commandBtn.setAttribute("onclick",menuButton.onclick);
 				commandBtn.setAttribute("title",menuButton.tooltip);
-				
-				
+
+
 				cf.appendChild(commandBtn);
 			});
-			
+
 			mr.appendChild(cf);
 			listGroup.appendChild(mr);
 		});
@@ -230,27 +237,27 @@ function generateOptions(){
 function mouseMoved(event){
 	var x = event.clientX;
 	var y = event.clientY;
-	
+
 	var topLeft = document.getElementById("ch1");
 	var topRight = document.getElementById("ch2");
 	var bottomLeft = document.getElementById("ch3");
 	var bottomRight = document.getElementById("ch4");
-	
+
 	topLeft.style.width = x;
 	topLeft.style.height = y;
 	topLeft.style.left = 0;
 	topLeft.style.top = 0;
-	
+
 	topRight.style.width = width - x;
 	topRight.style.height = y;
 	topRight.style.left = x;
 	topRight.style.top = 0;
-	
+
 	bottomLeft.style.width = x;
 	bottomLeft.style.height = height - y;
 	bottomLeft.style.left = 0;
 	bottomLeft.style.top = y;
-	
+
 	bottomRight.style.width = width - x;
 	bottomRight.style.height = height - y;
 	bottomRight.style.left = x;
@@ -301,11 +308,18 @@ function optionsLocation(pos){
 	var place = settings.menuPlacement;
 	var styles = {
 		"tl":"container-fluid options-top-left",
+		"tc":"container-fluid options-top-center",
 		"tr":"container-fluid options-top-right",
-		"br":"container-fluid options-bottom-right",
-		"bl":"container-fluid options-bottom-left"
+
+		"cl":"container-fluid options-center-left",
+		"c":"container-fluid options-center",
+		"cr":"container-fluid options-center-right"
+
+		"bl":"container-fluid options-bottom-left",
+		"bc":"container-fluid options-bottom-center",
+		"br":"container-fluid options-bottom-right"
 	};
-	
+
 	var options = document.getElementById("options");
 	options.className = styles[pos];
 }
@@ -365,7 +379,7 @@ function childOf(parent,child){
 
 function toggleMinimum(){
 	forceMinimum = !forceMinimum;
-	
+
 	var every = document.getElementsByClassName("every");
 	for(let i = 0; i < every.length; i++){
 		let each = every[i];
@@ -380,7 +394,7 @@ function toggleMinimum(){
 
 function borderize(){
 	borders = !borders;
-	
+
 	var every = document.getElementsByClassName("every");
 	for(let i = 0; i < every.length; i++){
 		let each = every[i];
@@ -420,7 +434,7 @@ function command(element){
 			newElement = document.createElement("DIV");
 			newElement.className = "panel panel-default";
 			break;
-		
+
 		case "insert_grid":
 			newElement = document.createElement("DIV");
 			newElement.className = "row";
@@ -438,7 +452,7 @@ function command(element){
 				newElement.appendChild(column);
 			}
 			break;
-		
+
 		case "insert_grid_1":
 			newElement = document.createElement("DIV");
 			newElement.className = "row";
@@ -582,7 +596,7 @@ function command(element){
 	if(newElement !== undefined){
 		newElement.classList.add("every");
 		newElement.setAttribute("onclick","execute(this,event)");
-		
+
 		if(borders) newElement.classList.add("borderize");
 		if(forceMinimum) newElement.classList.add("peek");
 		if(useLoremIpsum) {
