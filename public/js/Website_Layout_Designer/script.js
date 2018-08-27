@@ -313,7 +313,7 @@ function optionsLocation(pos){
 
 		"cl":"container-fluid options-center-left",
 		"c":"container-fluid options-center",
-		"cr":"container-fluid options-center-right"
+		"cr":"container-fluid options-center-right",
 
 		"bl":"container-fluid options-bottom-left",
 		"bc":"container-fluid options-bottom-center",
