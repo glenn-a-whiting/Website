@@ -29,7 +29,7 @@ var menuOptions = {
 			{"label": "Center Left", "extra-classes": "", "extra-attributes":{}, "onclick": "optionsLocation('cl')", "value": "", "tooltip": "", "input-type": null},
 			{"label": "Center", "extra-classes": "", "extra-attributes":{}, "onclick": "optionsLocation('c')", "value": "", "tooltip": "", "input-type": null},
 			{"label": "Center Right", "extra-classes": "", "extra-attributes":{}, "onclick": "optionsLocation('cr')", "value": "", "tooltip": "", "input-type": null}
-		]
+		],
 		[
 			{"label": "Bottom Left", "extra-classes": "", "extra-attributes":{}, "onclick": "optionsLocation('bl')", "value": "", "tooltip": "", "input-type": null},
 			{"label": "Bottom Center", "extra-classes": "", "extra-attributes":{}, "onclick": "optionsLocation('bc')", "value": "", "tooltip": "", "input-type": null},
@@ -310,11 +310,9 @@ function optionsLocation(pos){
 		"tl":"container-fluid options-top-left",
 		"tc":"container-fluid options-top-center",
 		"tr":"container-fluid options-top-right",
-
 		"cl":"container-fluid options-center-left",
 		"c":"container-fluid options-center",
 		"cr":"container-fluid options-center-right",
-
 		"bl":"container-fluid options-bottom-left",
 		"bc":"container-fluid options-bottom-center",
 		"br":"container-fluid options-bottom-right"
