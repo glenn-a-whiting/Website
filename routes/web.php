@@ -15,7 +15,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get("/home","PageController@index");
-Route::get("/home/{lang}","PageController@page");
-Route::get("/home/{lang}/{page}","PageController@specific");
-Route::get("/home/{lang}/{page}/{directory}","PageController@subdirectory");
+Route::get("/","PageController@index");
+Route::get("/{lang}","PageController@page");
+Route::get("/{lang}/{page}","PageController@specific");
+Route::get("/{lang}/{page}/{directory}","PageController@subdirectory");
