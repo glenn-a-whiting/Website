@@ -19,6 +19,11 @@ class Page extends Model
 				"thumbnail" => "https://i.imgur.com/xJIiA1r.png",
 				"data" => ""
 			],
+			"Website_Layout_Designer" => [
+				"description" => "(WIP) An interactive website layout designer. First project stage uses only bootstrap classes, Second stage will be more customizable",
+				"thumbnail" => "https://i.imgur.com/or8abx8.png",
+				"data" => ""
+			]
 			/*"Restaurant" => [
 				"description" => "A restaurant ordering system, designed to also keep track of ingredient stocks.",
 				"thumbnail" => "",

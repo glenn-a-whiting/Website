@@ -1,0 +1,72 @@
+#ch1, #ch2, #ch3, #ch4 {
+	position: fixed;
+	pointer-events: none;
+}
+
+#ch1 {
+	border-right: black dashed 1px;
+	border-bottom: black dashed 1px;
+}
+
+#ch2 {
+	border-bottom: black dashed 1px;
+}
+
+#ch3 {
+	border-right: black dashed 1px;
+}
+
+#options {
+	position: fixed;
+	display: block;
+	width: 20%;
+	transition: top 1s, left 1s, transform 1s;
+	-webkit-transition: top 1s, left 1s, transform 1s;
+}
+
+#main {
+	height: 100%;
+	width: 100%;
+}
+
+.options-top-left {
+	top: 0%;
+	left: 0%;
+	transform: translate(0%,0%);
+}
+
+.options-top-right {
+	top: 0%;
+	left: 100%;
+	transform: translate(-100%,0%);
+}
+
+.options-bottom-right {
+	top: 100%;
+	left: 100%;
+	transform: translate(-100%,-100%);
+}
+
+.options-bottom-left {
+	top: 100%;
+	left: 0%;
+	transform: translate(0%,-100%);
+}
+
+.selected {
+	background-color: rgba(128,128,255,0.25);
+}
+
+.peek {
+	padding: 15px;
+	min-width: 15px;
+	min-height: 15px;
+}
+
+.borderize {
+	border: 1px dotted black;
+}
+
+.every:hover {
+	background-color: rgba(255,255,0,0.25);
+}
