@@ -9,6 +9,11 @@ class Page extends Model
     public const PAGES = [
 		"html" => [
 			"description" => "Websites and HTML related creations",
+			"Website_Layout_Designer" => [
+				"description" => "(WIP) An interactive website layout designer. First project stage uses only bootstrap classes, Second stage will be more customizable",
+				"thumbnail" => "https://i.imgur.com/or8abx8.png",
+				"data" => ""
+			],
 			"Jacks_Pancakes" => [
 				"description" => "End-semester Website made in university. Employs PHP content rendering, loading from a file-based database, custom vanilla css.",
 				"thumbnail" => "https://i.imgur.com/BbdMDn5.png",
@@ -18,12 +23,8 @@ class Page extends Model
 				"description" => "Jack Sparrow's kitchen shop",
 				"thumbnail" => "https://i.imgur.com/xJIiA1r.png",
 				"data" => ""
-			],
-			"Website_Layout_Designer" => [
-				"description" => "(WIP) An interactive website layout designer. First project stage uses only bootstrap classes, Second stage will be more customizable",
-				"thumbnail" => "https://i.imgur.com/or8abx8.png",
-				"data" => ""
 			]
+
 			/*"Restaurant" => [
 				"description" => "A restaurant ordering system, designed to also keep track of ingredient stocks.",
 				"thumbnail" => "",
