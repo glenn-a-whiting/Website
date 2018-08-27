@@ -15,11 +15,11 @@
 				</div>
 				<div class="row sampleRow">
 					<div class="col-sm-11 sampleImage">
-						<a href="/home/{{ $heading }}/{{ $name }}">
+						<a href="/{{ $heading }}/{{ $name }}">
 							<img src="{{ $page['thumbnail'] }}" width="100%"/>
 						</a>
 					</div>
-					<a href="/home/{{ $heading }}/{{ $name }}">
+					<a href="/{{ $heading }}/{{ $name }}">
 						<div class="hidden-md-down col-sm-1 btn btn-info sampleButton">
 							<span class="glyphicon glyphicon-chevron-right"></span>
 						</div>

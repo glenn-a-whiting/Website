@@ -2,7 +2,7 @@
 <html lang="{{ app()->getLocale() }}">
 	@include ("partials.head")
 	<body>
-		<!--	
+		<!--
 		<nav class="navbar navbar-inverse">
 			<div class="container-fluid">
 				<div class="navbar-header">
@@ -15,7 +15,7 @@
 					<li><a class="text-center" href="#">Page 3</a></li>
 				</ul>
 			</div>
-		</nav> 
+		</nav>
 		-->
 
 		<div class="jumbotron text-center">
@@ -32,11 +32,11 @@
 			</div>
 			<div class="row sampleRow">
 				<div class="col-sm-11 sampleImage">
-					<a href="/home/{{ $language }}">
+					<a href="/{{ $language }}">
 						<img src="{{ $page[array_keys($page)[1]]['thumbnail'] }}" width="100%">
 					</a>
 				</div>
-				<a href="/home/{{ $language }}">
+				<a href="/{{ $language }}">
 					<div class="hidden-md-down col-sm-1 btn btn-info sampleButton">
 						<span class="glyphicon glyphicon-chevron-right"></span>
 					</div>
