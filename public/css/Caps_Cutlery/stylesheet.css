@@ -1,0 +1,55 @@
+body {
+	background-image: url("http://texturelib.com/Textures/wood/planks%20old/wood_planks_old_0050_01_preview.jpg");
+}
+
+div p {
+	background-color: rgba(255,255,255,0.5);
+}
+
+.banner {
+    height:150px;
+    width:100%;
+    background-image:url(JackSparrow.jpg);
+    background-position: center;
+    background-size: 50%;
+    background-repeat: no-repeat;
+    margin-bottom:10px;
+    background-position: center
+}
+
+.menu {
+    border-radius:5px;
+    border-color:black;
+    border-style:solid;
+    border-width:2px;
+    padding-top:0x;
+    padding-bottom:0px;
+    padding-left:8px;
+    padding-right:8px;
+    font-size:25px;
+    width:100%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top:2px;
+    margin-bottom: 2px;
+	background-color: rgba(255,255,255,0.5);
+}
+
+body h1 {
+	text-align: center;
+	text-shadow: 0px 0px 2px red;
+}
+
+.intro {
+    width:80%;
+    text-align: center;
+    padding:0px -50px 0px -50px;
+    margin-left: auto;
+    margin-right: auto;
+	background-color: rgba(255,255,255,0.5);
+}
+
+a {
+    text-decoration: none;
+}
