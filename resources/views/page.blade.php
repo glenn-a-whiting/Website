@@ -8,7 +8,7 @@
 		</div>
 			@foreach (array_slice($pages,1) as $name => $page)
 				<div class="well text-center">
-					<h2>{{ $name }}</h2>
+					<h2>{{ explode("_", implode(" ", $name)) }}</h2>
 					@if (strlen($page["description"]) > 0)
 					<h4>{{ $page["description"] }}</h4>
 					@endif
