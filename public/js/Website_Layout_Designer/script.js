@@ -123,12 +123,12 @@ var menuOptions = {
 	],
 	"Testing":[
 		[
-			{"label": "Modal", "extra-classes": "", "extra-attributes":{}, "onclick": "showModal(this)", "value": "show_modal", "tooltip": "", "input-type": null}
+			{"label": "Modal", "extra-classes": "", "extra-attributes":{}, "onclick": "showModal(this,'show_modal')", "value": "", "tooltip": "", "input-type": null}
 		]
 	],
 	"Edit":[
 		[
-			{"label": "Edit Element", "extra-classes": "", "extra-attributes":{}, "onclick": "showModal(this)", "value": "edit_element", "tooltip": "", "input-type": null}
+			{"label": "Edit Element", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false)", "value": "edit_element", "tooltip": "", "input-type": null}
 		]
 	]
 };
@@ -203,11 +203,11 @@ function generateOptions(){
 					commandBtn = document.createElement("DIV");
 					commandBtn.innerHTML = menuButton.label;
 
-					if(menuButton["onclick"] == "showModal(this)"){
+					/*if(menuButton["onclick"].startsWith("showModal(this)")){
 						commandBtn.innerHTML += " ...";
 						commandBtn.setAttribute("data-toggle","modal");
 						commandBtn.setAttribute("data-target","#modal");
-					}
+					}*/
 				}
 				else{
 					commandBtn = document.createElement("INPUT");
@@ -380,27 +380,64 @@ function formatName(string){
 	return res.slice(0,res.length-1);
 }
 
-function showModal(element){
-	var context = element.getAttribute("value");
+function showModal(element,context){
+	var modal = document.getElementById("modal");
 	var title = document.getElementById("modal-title");
 	var body = document.getElementById("modal-body");
+	var accept = document.getElementById("modal-accept");
 	title.innerHTML = formatName(context);
 	switch(context){
 		case "show_modal":
 			body.innerHTML = "This modal dialog's content will change depending on context. <br/> Context is the name seen in the modal dialog's header. <br/><br/> Options with an ellipsis (...) will open up a modal dialog";
 			break;
 		case "edit_element":
-			body.innerHTML = "Editing element";
+			body.innerHTML = "";
+			var listGroup = document.createElement("UL");
+			listGroup.className = "list-group";
+			var computedStyles = window.getComputedStyle(element);
+			for (var i = 0; i < computedStyles.length; i++) {
+				var key = computedStyles[i];
+				var value = computedStyles.getPropertyValue(key);
 
+				var li = document.createElement("LI");
+				li.className = "list-group-item";
+
+				var row = document.createElement("DIV");
+				row.className = "row";
+
+				var containerFluid = document.createElement("DIV");
+				containerFluid.className = "container-fluid";
+
+				var leftColumn = document.createElement("DIV");
+				leftColumn.className = "col-xs-6 col-sm-6 col-md-6 col-lg-6";
+				leftColumn.innerHTML = key;
+
+				var rightColumn = document.createElement("INPUT");
+				rightColumn.className = "col-xs-6 col-sm-6 col-md-6 col-lg-6 modal-list-group-item";
+				rightColumn.placeholder = value;
+
+				containerFluid.appendChild(leftColumn);
+				containerFluid.appendChild(rightColumn);
+				row.appendChild(containerFluid);
+				li.appendChild(row);
+				listGroup.appendChild(li);
+			}
+			body.appendChild(listGroup);
+
+			//accept.setAttribute("onclick","saveModalData('edit_element')");
 			break;
 		default:
 			body.innerHTML = "No correct modal context given.";
 			break;
 	}
+	$("#modal").modal("show");
 }
 
-function saveModalData(element,context){ /* TODO */
-
+function saveModalData(context){ /* TODO */
+	switch(context){
+		case "edit_element":
+			break;
+	}
 }
 
 function getParentWithClassName(element,name){
@@ -643,6 +680,9 @@ function command(element){
 				column.setAttribute("onclick","execute(this,event)");
 				newElement.appendChild(column);
 			}
+			break;
+		case "edit_element":
+			showModal(element,"edit_element");
 			break;
 		default:
 			break;

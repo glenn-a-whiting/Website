@@ -47,7 +47,12 @@
 }
 
 #modal > div > div {
-	margin: 50% auto;
+	margin: auto auto;
+}
+
+#modal-body {
+	overflow-y: scroll;
+	max-height: 50%;
 }
 
 .options-top-left {
@@ -120,4 +125,12 @@
 
 .every:hover {
 	background-color: rgba(255,255,0,0.25);
+}
+
+input.modal-list-group-item:placeholder-shown {
+	background-color: white;
+}
+
+input.modal-list-group-item:not(placeholder-shown) {
+	background-color: yellow;
 }

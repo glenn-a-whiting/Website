@@ -31,7 +31,7 @@
 						<p id="modal-body"></p>
 					</div>
 					<div class="modal-footer">
-						<button id="modal_accept" type="button" class="btn btn-success" data-dismiss="modal">Accept</button>
+						<button id="modal-accept" type="button" class="btn btn-success" data-dismiss="modal" title="This does not currently work.">Accept</button>
 						<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
 					</div>
 				</div>
