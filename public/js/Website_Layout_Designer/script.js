@@ -344,7 +344,18 @@ function toggle(element,independant=false,limitRow=false){
 		}
 		element.classList.add("active");
 		activeCommand = element.getAttribute("value");
+
+		var statInd = document.getElementById("status-indicator");
+		statInd.innerHTML = "Operation: " + activeCommand.split("_").join(" ");
+		statInd.style.animation = "";
+		window.setTimeout(function(){
+			statInd.style.animation = "status-indicator-blink 0.5s 1 running";
+		},10);
 	}
+}
+
+function capitalizeAll(array){
+
 }
 
 function getParentWithClassName(element,name){

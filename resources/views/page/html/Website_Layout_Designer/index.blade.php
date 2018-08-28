@@ -18,5 +18,6 @@
 		<div id="ch4" style="top:0px; left:0px; width:0px; height:0px;"></div>
 		<div id="options" class="container-fluid options-top-left">
 		</div>
+		<div id="status-indicator" class="alert isinvisible">Operation: None</div>
 	</body>
 </html>
