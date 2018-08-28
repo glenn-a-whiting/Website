@@ -8,6 +8,7 @@
 		<link rel="stylesheet" href="{{asset('css/Website_Layout_Designer/style.css')}}"/>
 	</head>
 	<body onresize="screenResized(this)" onload="afterLoad(this)">
+		<!-- User-created elements -->
 		<div id="main" class="every" onclick="execute(this,event)">
 
 		</div>
@@ -19,5 +20,22 @@
 		<div id="options" class="container-fluid options-top-left">
 		</div>
 		<div id="status-indicator" class="alert isinvisible">Operation: None</div>
+		<div id="modal" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+	          			<h4 class="modal-title" id="modal-title">Modal Header</h4>
+					</div>
+					<div class="modal-body">
+						<p id="modal-body"></p>
+					</div>
+					<div class="modal-footer">
+						<button id="modal_accept" type="button" class="btn btn-success" data-dismiss="modal">Accept</button>
+						<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
 	</body>
 </html>

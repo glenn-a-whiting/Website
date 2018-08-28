@@ -46,6 +46,10 @@
 	50% {background-color: lime;}
 }
 
+#modal > div > div {
+	margin: 50% auto;
+}
+
 .options-top-left {
 	top: 0%;
 	left: 0%;

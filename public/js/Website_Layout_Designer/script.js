@@ -9,6 +9,8 @@ var settings = {
 	"tool": "selecting"
 };
 
+// {"label": "", "extra-classes": "", "extra-attributes":{}, "onclick": "", "value": "", "tooltip": "", "input-type": null}
+
 var menuOptions = {
 	"Insert":[
 		[
@@ -118,6 +120,16 @@ var menuOptions = {
 		[
 			{"label": "# of Rows", "extra-classes": "", "extra-attributes":{"onchange":"changeCommandDetails('listGroupRowCount',this.value)"}, "onclick": "", "value": "", "tooltip": "", "input-type": "number"}
 		]
+	],
+	"Testing":[
+		[
+			{"label": "Modal", "extra-classes": "", "extra-attributes":{}, "onclick": "showModal(this)", "value": "show_modal", "tooltip": "", "input-type": null}
+		]
+	],
+	"Edit":[
+		[
+			{"label": "Edit Element", "extra-classes": "", "extra-attributes":{}, "onclick": "showModal(this)", "value": "edit_element", "tooltip": "", "input-type": null}
+		]
 	]
 };
 
@@ -190,6 +202,12 @@ function generateOptions(){
 				if(menuButton["input-type"] == null){
 					commandBtn = document.createElement("DIV");
 					commandBtn.innerHTML = menuButton.label;
+
+					if(menuButton["onclick"] == "showModal(this)"){
+						commandBtn.innerHTML += " ...";
+						commandBtn.setAttribute("data-toggle","modal");
+						commandBtn.setAttribute("data-target","#modal");
+					}
 				}
 				else{
 					commandBtn = document.createElement("INPUT");
@@ -346,7 +364,7 @@ function toggle(element,independant=false,limitRow=false){
 		activeCommand = element.getAttribute("value");
 
 		var statInd = document.getElementById("status-indicator");
-		statInd.innerHTML = "Operation: " + activeCommand.split("_").join(" ");
+		statInd.innerHTML = "Operation: " + formatName(activeCommand);
 		statInd.style.animation = "";
 		window.setTimeout(function(){
 			statInd.style.animation = "status-indicator-blink 0.5s 1 running";
@@ -354,7 +372,34 @@ function toggle(element,independant=false,limitRow=false){
 	}
 }
 
-function capitalizeAll(array){
+function formatName(string){
+	var res = "";
+	string.split("_").forEach(word => {
+		res += word.charAt(0).toUpperCase() + word.slice(1).toLowerCase() + " ";
+	});
+	return res.slice(0,res.length-1);
+}
+
+function showModal(element){
+	var context = element.getAttribute("value");
+	var title = document.getElementById("modal-title");
+	var body = document.getElementById("modal-body");
+	title.innerHTML = formatName(context);
+	switch(context){
+		case "show_modal":
+			body.innerHTML = "This modal dialog's content will change depending on context. <br/> Context is the name seen in the modal dialog's header. <br/><br/> Options with an ellipsis (...) will open up a modal dialog";
+			break;
+		case "edit_element":
+			body.innerHTML = "Editing element";
+
+			break;
+		default:
+			body.innerHTML = "No correct modal context given.";
+			break;
+	}
+}
+
+function saveModalData(element,context){ /* TODO */
 
 }
 
