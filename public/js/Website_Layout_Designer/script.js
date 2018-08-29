@@ -19,6 +19,9 @@ var menuOptions = {
 		],
 		[
 			{"label": "Panel", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false)", "value": "insert_panel", "tooltip": "insert a panel where you click", "input-type": null}
+		],
+		[
+			{"label": "Grid ...", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false)", "value": "insert_grid", "tooltip": "", "input-type": null}
 		]
 	],
 	"Move Menu":[
@@ -62,7 +65,7 @@ var menuOptions = {
 			{"label": "Danger", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false)", "value": "", "tooltip": "", "input-type": null}
 		]
 	],
-	"Grid":[
+	/*"Grid":[
 		[
 			{"label": "1", "extra-classes": "disabled", "extra-attributes":{}, "onclick": "", "value": "insert_panel", "tooltip": "", "input-type": null},
 			{"label": "2", "extra-classes": "disabled", "extra-attributes":{}, "onclick": "", "value": "insert_panel", "tooltip": "", "input-type": null},
@@ -111,7 +114,7 @@ var menuOptions = {
 			{"label": "all", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false); changeCommandDetails({});", "value": "insert_panel", "tooltip": "", "input-type": null},
 			{"label": "all", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false); changeCommandDetails({});", "value": "insert_panel", "tooltip": "", "input-type": null}
 		]
-	],
+	],*/
 	"List group":[
 		[
 			{"label": "Standard", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false)", "value": "insert_standard_list_group", "tooltip": "", "input-type": null},
@@ -128,7 +131,8 @@ var menuOptions = {
 	],
 	"Edit":[
 		[
-			{"label": "Edit Element", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false)", "value": "edit_element", "tooltip": "", "input-type": null}
+			{"label": "Edit Styles", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false)", "value": "edit_styles", "tooltip": "", "input-type": null},
+			{"label": "Edit Classes", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false)", "value": "edit_classes", "tooltip": "", "input-type": null}
 		]
 	]
 };
@@ -138,6 +142,7 @@ var activeCommandDetails = {};
 var forceMinimum = false;
 var borders = false;
 var useLoremIpsum = false;
+var fixedClasses = ["every","borderize","peek"]; //classes which cannot be altered, and will be removed upon final file output
 
 function afterLoad(element){
 	width = element.innerWidth;
@@ -386,11 +391,12 @@ function showModal(element,context){
 	var body = document.getElementById("modal-body");
 	var accept = document.getElementById("modal-accept");
 	title.innerHTML = formatName(context);
+	body.innerHTML = "";
 	switch(context){
 		case "show_modal":
 			body.innerHTML = "This modal dialog's content will change depending on context. <br/> Context is the name seen in the modal dialog's header. <br/><br/> Options with an ellipsis (...) will open up a modal dialog";
 			break;
-		case "edit_element":
+		case "edit_styles":
 			body.innerHTML = "";
 			var listGroup = document.createElement("UL");
 			listGroup.className = "list-group";
@@ -424,7 +430,62 @@ function showModal(element,context){
 			}
 			body.appendChild(listGroup);
 
-			//accept.setAttribute("onclick","saveModalData('edit_element')");
+			//accept.setAttribute("onclick","saveModalData('edit_styles')");
+			break;
+
+		case "edit_classes":
+			var classes = element.classList;
+
+			var listGroup = document.createElement("UL");
+			listGroup.className = "list-group";
+
+			for (var i = 0; i < classes.length; i++) {
+				var c = classes[i];
+				if(fixedClasses.some(fc => fc == c)) continue;
+
+				var li = document.createElement("LI");
+				li.className = "list-group-item";
+				li.innerHTML = c;
+
+				listGroup.appendChild(li);
+			}
+			body.appendChild(listGroup);
+			break;
+
+		case "insert_grid":
+			var listGroup = document.createElement("UL");
+			listGroup.className = "list-group";
+			var sizes = ["xs","sm","md","lg"];
+			var p = document.createElement("P");
+			p.innerHTML = "Click on grey bars to signify a division. Number of divisions must be equal across all grid sizes.";
+
+			for (var i = 0; i < 4; i++) {
+				var li = document.createElement("LI");
+				var row = document.createElement("DIV");
+				var containerFluid = document.createElement("DIV");
+				var column = document.createElement("DIV");
+
+				li.className = "list-group-item";
+				li.setAttribute("onmousemove","");
+
+				row.className = "row";
+				containerFluid.className = "container-fluid";
+				column.className = "col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center grid_insertion";
+				column.innerHTML = sizes[i];
+
+				containerFluid.appendChild(column);
+				row.appendChild(containerFluid);
+				li.appendChild(row);
+				listGroup.append(li);
+
+				for (var j = 1; j <= 11; j++) {
+					let div = document.createElement("DIV");
+					div.className = "grid_division grid_division_" + j;
+					div.setAttribute("onclick","this.classList.toggle('isActive'); gridVerification()");
+					li.appendChild(div);
+				}
+			}
+			body.appendChild(listGroup);
 			break;
 		default:
 			body.innerHTML = "No correct modal context given.";
@@ -433,9 +494,24 @@ function showModal(element,context){
 	$("#modal").modal("show");
 }
 
+function gridVerification(){
+	var accept = document.getElementById("modal-accept");
+	var count = document.getElementsByClassName("grid_division isActive").length;
+	var flag = count === 0 || count % 4 === 0;
+
+	if(!flag){
+		accept.classList.add("disabled");
+		accept.style.pointerEvents = "none";
+	}
+	else{
+		accept.classList.remove("disabled");
+		accept.style.pointerEvents = "auto";
+	}
+}
+
 function saveModalData(context){ /* TODO */
 	switch(context){
-		case "edit_element":
+		case "edit_styles":
 			break;
 	}
 }
@@ -502,7 +578,6 @@ function useLorem(){
 	useLoremIpsum = !useLoremIpsum;
 }
 
-
 function execute(element,event){
 	if(event.target == element){
 		command(element);
@@ -527,125 +602,8 @@ function command(element){
 			break;
 
 		case "insert_grid":
-			newElement = document.createElement("DIV");
-			newElement.className = "row";
-			for(let i = 0; i < activeCommandDetails["grid_row_xs"]; i++){
-				let column = document.createElement("DIV");
-				column.className = "every col-xs-12 col-sm-12 col-md-12 col-lg-12";
-				if(borders) column.classList.add("borderize");
-				if(forceMinimum) column.classList.add("peek");
-				if(useLoremIpsum) {
-					var rand = Math.floor(Math.random()*30)+10;
-					column.innerHTML = loremIpsum.split(" ").slice(loremPosition,loremPosition+rand).join(" ");
-					loremPosition = (loremPosition + rand) % loremIpsum.split(" ").length;
-				}
-				column.setAttribute("onclick","execute(this,event)");
-				newElement.appendChild(column);
-			}
-			break;
+			showModal(element,"insert_grid");
 
-		case "insert_grid_1":
-			newElement = document.createElement("DIV");
-			newElement.className = "row";
-			for(let i = 0; i < 1; i++){
-				let column = document.createElement("DIV");
-				column.className = "every col-xs-12 col-sm-12 col-md-12 col-lg-12";
-				if(borders) column.classList.add("borderize");
-				if(forceMinimum) column.classList.add("peek");
-				if(useLoremIpsum) {
-					var rand = Math.floor(Math.random()*30)+10;
-					column.innerHTML = loremIpsum.split(" ").slice(loremPosition,loremPosition+rand).join(" ");
-					loremPosition = (loremPosition + rand) % loremIpsum.split(" ").length;
-				}
-				column.setAttribute("onclick","execute(this,event)");
-				newElement.appendChild(column);
-			}
-			break;
-		case "insert_grid_2":
-			newElement = document.createElement("DIV");
-			newElement.className = "row";
-			for(let i = 0; i < 2; i++){
-				let column = document.createElement("DIV");
-				column.className = "every col-xs-6 col-sm-6 col-md-6 col-lg-6";
-				if(borders) column.classList.add("borderize");
-				if(forceMinimum) column.classList.add("peek");
-				if(useLoremIpsum) {
-					var rand = Math.floor(Math.random()*30)+10;
-					column.innerHTML = loremIpsum.split(" ").slice(loremPosition,loremPosition+rand).join(" ");
-					loremPosition = (loremPosition + rand) % loremIpsum.split(" ").length;
-				}
-				column.setAttribute("onclick","execute(this,event)");
-				newElement.appendChild(column);
-			}
-			break;
-		case "insert_grid_3":
-			newElement = document.createElement("DIV");
-			newElement.className = "row";
-			for(let i = 0; i < 3; i++){
-				let column = document.createElement("DIV");
-				column.className = "every col-xs-4 col-sm-4 col-md-4 col-lg-4";
-				if(borders) column.classList.add("borderize");
-				if(forceMinimum) column.classList.add("peek");
-				if(useLoremIpsum) {
-					var rand = Math.floor(Math.random()*30)+10;
-					column.innerHTML = loremIpsum.split(" ").slice(loremPosition,loremPosition+rand).join(" ");
-					loremPosition = (loremPosition + rand) % loremIpsum.split(" ").length;
-				}
-				column.setAttribute("onclick","execute(this,event)");
-				newElement.appendChild(column);
-			}
-			break;
-		case "insert_grid_4":
-			newElement = document.createElement("DIV");
-			newElement.className = "row";
-			for(let i = 0; i < 4; i++){
-				let column = document.createElement("DIV");
-				column.className = "every col-xs-3 col-sm-3 col-md-3 col-lg-3";
-				if(borders) column.classList.add("borderize");
-				if(forceMinimum) column.classList.add("peek");
-				if(useLoremIpsum) {
-					var rand = Math.floor(Math.random()*30)+10;
-					column.innerHTML = loremIpsum.split(" ").slice(loremPosition,loremPosition+rand).join(" ");
-					loremPosition = (loremPosition + rand) % loremIpsum.split(" ").length;
-				}
-				column.setAttribute("onclick","execute(this,event)");
-				newElement.appendChild(column);
-			}
-			break;
-		case "insert_grid_6":
-			newElement = document.createElement("DIV");
-			newElement.className = "row";
-			for(let i = 0; i < 6; i++){
-				let column = document.createElement("DIV");
-				column.className = "every col-xs-2 col-sm-2 col-md-2 col-lg-2";
-				if(borders) column.classList.add("borderize");
-				if(forceMinimum) column.classList.add("peek");
-				if(useLoremIpsum) {
-					var rand = Math.floor(Math.random()*30)+10;
-					column.innerHTML = loremIpsum.split(" ").slice(loremPosition,loremPosition+rand).join(" ");
-					loremPosition = (loremPosition + rand) % loremIpsum.split(" ").length;
-				}
-				column.setAttribute("onclick","execute(this,event)");
-				newElement.appendChild(column);
-			}
-			break;
-		case "insert_grid_12":
-			newElement = document.createElement("DIV");
-			newElement.className = "row";
-			for(let i = 0; i < 12; i++){
-				let column = document.createElement("DIV");
-				column.className = "every col-xs-1 col-sm-1 col-md-1 col-lg-1";
-				if(borders) column.classList.add("borderize");
-				if(forceMinimum) column.classList.add("peek");
-				if(useLoremIpsum) {
-					var rand = Math.floor(Math.random()*30)+10;
-					column.innerHTML = loremIpsum.split(" ").slice(loremPosition,loremPosition+rand).join(" ");
-					loremPosition = (loremPosition + rand) % loremIpsum.split(" ").length;
-				}
-				column.setAttribute("onclick","execute(this,event)");
-				newElement.appendChild(column);
-			}
-			break;
 		case "insert_clickable_list_group":
 			newElement = document.createElement("DIV");
 			newElement.className = "list-group";
@@ -681,8 +639,11 @@ function command(element){
 				newElement.appendChild(column);
 			}
 			break;
-		case "edit_element":
-			showModal(element,"edit_element");
+		case "edit_styles":
+			showModal(element,"edit_styles");
+			break;
+		case "edit_classes":
+			showModal(element,"edit_classes")
 			break;
 		default:
 			break;

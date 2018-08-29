@@ -13,13 +13,19 @@
 
 		</div>
 	<!-- Fixed elements -->
+		<!-- Crosshairs -->
 		<div id="ch1" style="top:0px; left:0px; width:0px; height:0px;"></div>
 		<div id="ch2" style="top:0px; left:0px; width:0px; height:0px;"></div>
 		<div id="ch3" style="top:0px; left:0px; width:0px; height:0px;"></div>
 		<div id="ch4" style="top:0px; left:0px; width:0px; height:0px;"></div>
-		<div id="options" class="container-fluid options-top-left">
-		</div>
+
+		<!-- Options Menu -->
+		<div id="options" class="container-fluid options-top-left"></div>
+
+		<!-- Status Indicator -->
 		<div id="status-indicator" class="alert isinvisible">Operation: None</div>
+
+		<!-- Modal Popup Menu -->
 		<div id="modal" class="modal fade" role="dialog">
 			<div class="modal-dialog">
 				<div class="modal-content">

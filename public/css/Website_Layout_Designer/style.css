@@ -134,3 +134,65 @@ input.modal-list-group-item:placeholder-shown {
 input.modal-list-group-item:not(placeholder-shown) {
 	background-color: yellow;
 }
+
+.grid_insertion {
+	background-color: white;
+}
+
+.grid-insertion:hover {
+	background-color: yellow;
+}
+
+.grid_division {
+	position: absolute;
+	border-style: solid;
+	border-width: thick;
+	border-color: rgba(200,200,200,0.5);
+	display: block;
+	top: 0%;
+	height: 100%;
+	width: 0px;
+}
+
+.grid_division:hover {
+	border-color: rgba(100,100,100,0.5);
+}
+
+.grid_division.isActive {
+	border-color: black;
+}
+
+
+.grid_division_1 {
+	left: 8.333%;
+}
+.grid_division_2 {
+	left: 16.666%;
+}
+.grid_division_3 {
+	left: 25%;
+}
+.grid_division_4 {
+	left: 33.333%;
+}
+.grid_division_5 {
+	left: 41.666%;
+}
+.grid_division_6 {
+	left: 50%;
+}
+.grid_division_7 {
+	left: 58.333%;
+}
+.grid_division_8 {
+	left: 66.666%;
+}
+.grid_division_9 {
+	left: 75%;
+}
+.grid_division_10 {
+	left: 83.333%;
+}
+.grid_division_11 {
+	left: 91.666%;
+}
