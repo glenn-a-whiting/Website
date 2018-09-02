@@ -144,6 +144,9 @@ var borders = false;
 var useLoremIpsum = false;
 var fixedClasses = ["every","borderize","peek"]; //classes which cannot be altered, and will be removed upon final file output
 
+var contextElement; // last element clicked, used primarily for modals
+var contextData = {};
+
 function afterLoad(element){
 	width = element.innerWidth;
 	height = element.innerHeight;
@@ -386,6 +389,7 @@ function formatName(string){
 }
 
 function showModal(element,context){
+	contextElement = element;
 	var modal = document.getElementById("modal");
 	var title = document.getElementById("modal-title");
 	var body = document.getElementById("modal-body");
@@ -401,9 +405,12 @@ function showModal(element,context){
 			var listGroup = document.createElement("UL");
 			listGroup.className = "list-group";
 			var computedStyles = window.getComputedStyle(element);
+			var contextDataKeys = [];
+
 			for (var i = 0; i < computedStyles.length; i++) {
 				var key = computedStyles[i];
 				var value = computedStyles.getPropertyValue(key);
+				contextDataKeys.push(key);
 
 				var li = document.createElement("LI");
 				li.className = "list-group-item";
@@ -421,6 +428,7 @@ function showModal(element,context){
 				var rightColumn = document.createElement("INPUT");
 				rightColumn.className = "col-xs-6 col-sm-6 col-md-6 col-lg-6 modal-list-group-item";
 				rightColumn.placeholder = value;
+				rightColumn.setAttribute("onchange","changeContextData('" + key + "', this.value)");
 
 				containerFluid.appendChild(leftColumn);
 				containerFluid.appendChild(rightColumn);
@@ -430,7 +438,13 @@ function showModal(element,context){
 			}
 			body.appendChild(listGroup);
 
-			//accept.setAttribute("onclick","saveModalData('edit_styles')");
+			var tempContextData = {};
+			contextDataKeys.forEach(k => {
+				tempContextData[k] = null;
+			});
+			contextData = tempContextData;
+
+			accept.setAttribute("onclick","saveModalData('edit_styles')");
 			break;
 
 		case "edit_classes":
@@ -465,12 +479,12 @@ function showModal(element,context){
 				var containerFluid = document.createElement("DIV");
 				var column = document.createElement("DIV");
 
-				li.className = "list-group-item";
+				li.className = "list-group-item grid_insertion";
 				li.setAttribute("onmousemove","");
 
 				row.className = "row";
 				containerFluid.className = "container-fluid";
-				column.className = "col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center grid_insertion";
+				column.className = "col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center";
 				column.innerHTML = sizes[i];
 
 				containerFluid.appendChild(column);
@@ -479,13 +493,17 @@ function showModal(element,context){
 				listGroup.append(li);
 
 				for (var j = 1; j <= 11; j++) {
+					let k = (i + 1) + "_" + j;
+					contextData[k] = false;
 					let div = document.createElement("DIV");
 					div.className = "grid_division grid_division_" + j;
-					div.setAttribute("onclick","this.classList.toggle('isActive'); gridVerification()");
+					div.setAttribute("onclick","this.classList.toggle('isActive'); gridVerification(); changeContextData('"+k+"',this.classList.contains(\'isActive\'));");
 					li.appendChild(div);
 				}
 			}
 			body.appendChild(listGroup);
+			accept.setAttribute("title","Each size must have the same number of divisions.");
+			accept.setAttribute("onclick","saveModalData('insert_grid')");
 			break;
 		default:
 			body.innerHTML = "No correct modal context given.";
@@ -494,10 +512,33 @@ function showModal(element,context){
 	$("#modal").modal("show");
 }
 
+function changeContextData(key, value){
+	contextData[key] = value;
+}
+
 function gridVerification(){
 	var accept = document.getElementById("modal-accept");
-	var count = document.getElementsByClassName("grid_division isActive").length;
-	var flag = count === 0 || count % 4 === 0;
+	var divs = document.getElementsByClassName("grid_insertion");
+	var count;
+	var flag = true;
+	for(let i = 0; i < divs.length; i++){
+		var d = divs[i];
+		var children = d.children;
+		var tempCount = 0;
+		for(let j = 0; j < children.length; j++){
+			var c = children[j];
+			if(c.classList.contains("isActive")){
+				tempCount++;
+			}
+		}
+		if(count == undefined){
+			count = tempCount;
+		}
+		if(tempCount != count){
+			flag = false;
+			break;
+		}
+	}
 
 	if(!flag){
 		accept.classList.add("disabled");
@@ -512,8 +553,81 @@ function gridVerification(){
 function saveModalData(context){ /* TODO */
 	switch(context){
 		case "edit_styles":
+			var inlineStyle = "";
+			var existingStyles = contextElement.hasAttribute("style") ? contextElement.getAttribute("style").split(";") : [];
+			Object.keys(contextData).forEach(key => {
+				let value = contextData[key];
+				if (value !== null){
+					inlineStyle += key + ":" + value + ";";
+				}
+				else{
+					existingStyles.forEach(style => {
+						var s = style.split(":");
+						if(s[0] == key){
+							inlineStyle += style;
+						}
+					});
+				}
+			});
+			contextElement.setAttribute("style",inlineStyle);
+			break;
+
+		case "insert_grid":
+			var column = [];
+			var longestColumn = 0;
+			for(let i = 1; i <= 4; i++){
+				var row = [];
+				for(let j = 1, p = 1; j <= 11; j++, p++){
+					var key = i + "_" + j;
+					var value = contextData[key];
+
+					if(value){
+						row.push(p);
+						if(j === 11){
+							row.push(1);
+						}
+						p = 0;
+					}
+					else if(j === 11){
+						row.push(p+1);
+					}
+				}
+				column.push(row);
+				if(row.length > longestColumn) longestColumn = row.length;
+
+			}
+
+			console.log(column);
+			var realColumn = [];
+
+			for(let i = 0; i < longestColumn; i++){
+				var realRow = [];
+				for(let j = 0; j < 4; j++){
+					realRow.push(column[j][i]);
+					console.log(j,i);
+				}
+				realColumn.push(realRow);
+			}
+			console.log(realColumn);
+			var size = ["xs","sm","md","lg"];
+
+			var newrow = document.createElement("DIV");
+			realColumn.forEach(c => {
+				var newcolumn = document.createElement("DIV");
+				c.forEach((s,i) => {
+					newcolumn.classList.add("col-"+size[i]+"-"+s);
+				});
+				prepareElement(newcolumn);
+				newrow.appendChild(newcolumn);
+			});
+			prepareElement(newrow);
+			contextElement.appendChild(newrow);
 			break;
 	}
+
+	//clean up after data is submitted.
+	contextElement = undefined;
+	contextData = {};
 }
 
 function getParentWithClassName(element,name){
@@ -584,6 +698,18 @@ function execute(element,event){
 	}
 }
 
+function prepareElement(newElement){
+	newElement.classList.add("every");
+	newElement.setAttribute("onclick","execute(this,event)");
+
+	if(borders) newElement.classList.add("borderize");
+	if(forceMinimum) newElement.classList.add("peek");
+	if(useLoremIpsum) {
+		var rand = Math.floor(Math.random()*30)+10;
+		newElement.innerHTML += loremIpsum.split(" ").slice(loremPosition,loremPosition+rand).join(" ");
+		loremPosition = (loremPosition + rand) % loremIpsum.split(" ").length;
+	}
+}
 
 function command(element){
 	var newElement;
@@ -610,15 +736,8 @@ function command(element){
 			for(let i = 0; i < activeCommandDetails["listGroupRowCount"]; i++){
 				let column = document.createElement("A");
 				column.setAttribute("href","#");
-				column.className = "every list-group-item";
-				if(borders) column.classList.add("borderize");
-				if(forceMinimum) column.classList.add("peek");
-				if(useLoremIpsum) {
-					var rand = Math.floor(Math.random()*30)+10;
-					column.innerHTML = loremIpsum.split(" ").slice(loremPosition,loremPosition+rand).join(" ");
-					loremPosition = (loremPosition + rand) % loremIpsum.split(" ").length;
-				}
-				column.setAttribute("onclick","execute(this,event)");
+				column.className = "list-group-item";
+				prepareElement(column);
 				newElement.appendChild(column);
 			}
 			break;
@@ -627,15 +746,8 @@ function command(element){
 			newElement.className = "list-group";
 			for(let i = 0; i < activeCommandDetails["listGroupRowCount"]; i++){
 				let column = document.createElement("LI");
-				column.className = "every list-group-item";
-				if(borders) column.classList.add("borderize");
-				if(forceMinimum) column.classList.add("peek");
-				if(useLoremIpsum) {
-					var rand = Math.floor(Math.random()*30)+10;
-					column.innerHTML = loremIpsum.split(" ").slice(loremPosition,loremPosition+rand).join(" ");
-					loremPosition = (loremPosition + rand) % loremIpsum.split(" ").length;
-				}
-				column.setAttribute("onclick","execute(this,event)");
+				column.className = "list-group-item";
+				prepareElement(column);
 				newElement.appendChild(column);
 			}
 			break;
@@ -643,7 +755,7 @@ function command(element){
 			showModal(element,"edit_styles");
 			break;
 		case "edit_classes":
-			showModal(element,"edit_classes")
+			showModal(element,"edit_classes");
 			break;
 		default:
 			break;
