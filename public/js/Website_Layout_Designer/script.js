@@ -22,6 +22,9 @@ var menuOptions = {
 		],
 		[
 			{"label": "Grid ...", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false)", "value": "insert_grid", "tooltip": "", "input-type": null}
+		],
+		[
+			{"label": "List Group ...", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false)", "value": "insert_list_group", "tooltip": "", "input-type": null}
 		]
 	],
 	"Move Menu":[
@@ -65,56 +68,6 @@ var menuOptions = {
 			{"label": "Danger", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false)", "value": "", "tooltip": "", "input-type": null}
 		]
 	],
-	/*"Grid":[
-		[
-			{"label": "1", "extra-classes": "disabled", "extra-attributes":{}, "onclick": "", "value": "insert_panel", "tooltip": "", "input-type": null},
-			{"label": "2", "extra-classes": "disabled", "extra-attributes":{}, "onclick": "", "value": "insert_panel", "tooltip": "", "input-type": null},
-			{"label": "3", "extra-classes": "disabled", "extra-attributes":{}, "onclick": "", "value": "insert_panel", "tooltip": "", "input-type": null},
-			{"label": "4", "extra-classes": "disabled", "extra-attributes":{}, "onclick": "", "value": "insert_panel", "tooltip": "", "input-type": null},
-			{"label": "6", "extra-classes": "disabled", "extra-attributes":{}, "onclick": "", "value": "insert_panel", "tooltip": "", "input-type": null},
-			{"label": "12", "extra-classes": "disabled", "extra-attributes":{}, "onclick": "", "value": "insert_panel", "tooltip": "", "input-type": null}
-		],
-		[
-			{"label": "xs", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false,true); changeCommandDetails({'grid_rows_xs':1});", "value": "insert_panel", "tooltip": "", "input-type": null},
-			{"label": "xs", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false,true); changeCommandDetails({'grid_rows_xs':2});", "value": "insert_panel", "tooltip": "", "input-type": null},
-			{"label": "xs", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false,true); changeCommandDetails({'grid_rows_xs':3});", "value": "insert_panel", "tooltip": "", "input-type": null},
-			{"label": "xs", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false,true); changeCommandDetails({'grid_rows_xs':4});", "value": "insert_panel", "tooltip": "", "input-type": null},
-			{"label": "xs", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false,true); changeCommandDetails({'grid_rows_xs':6});", "value": "insert_panel", "tooltip": "", "input-type": null},
-			{"label": "xs", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false,true); changeCommandDetails({'grid_rows_xs':12});", "value": "insert_panel", "tooltip": "", "input-type": null}
-		],
-		[
-			{"label": "sm", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false,true); changeCommandDetails({grid_rows_sm':1});", "value": "insert_panel", "tooltip": "", "input-type": null},
-			{"label": "sm", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false,true); changeCommandDetails({grid_rows_sm':2});", "value": "insert_panel", "tooltip": "", "input-type": null},
-			{"label": "sm", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false,true); changeCommandDetails({grid_rows_sm':3});", "value": "insert_panel", "tooltip": "", "input-type": null},
-			{"label": "sm", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false,true); changeCommandDetails({grid_rows_sm':4});", "value": "insert_panel", "tooltip": "", "input-type": null},
-			{"label": "sm", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false,true); changeCommandDetails({grid_rows_sm':6});", "value": "insert_panel", "tooltip": "", "input-type": null},
-			{"label": "sm", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false,true); changeCommandDetails({grid_rows_sm':12});", "value": "insert_panel", "tooltip": "", "input-type": null}
-		],
-		[
-			{"label": "md", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false,true); changeCommandDetails({grid_rows_md':1});", "value": "insert_panel", "tooltip": "", "input-type": null},
-			{"label": "md", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false,true); changeCommandDetails({grid_rows_md':2});", "value": "insert_panel", "tooltip": "", "input-type": null},
-			{"label": "md", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false,true); changeCommandDetails({grid_rows_md':3});", "value": "insert_panel", "tooltip": "", "input-type": null},
-			{"label": "md", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false,true); changeCommandDetails({grid_rows_md':4});", "value": "insert_panel", "tooltip": "", "input-type": null},
-			{"label": "md", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false,true); changeCommandDetails({grid_rows_md':6});", "value": "insert_panel", "tooltip": "", "input-type": null},
-			{"label": "md", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false,true); changeCommandDetails({grid_rows_md':12});", "value": "insert_panel", "tooltip": "", "input-type": null}
-		],
-		[
-			{"label": "lg", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false,true); changeCommandDetails({grid_rows_lg':1});", "value": "insert_panel", "tooltip": "", "input-type": null},
-			{"label": "lg", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false,true); changeCommandDetails({grid_rows_lg':2});", "value": "insert_panel", "tooltip": "", "input-type": null},
-			{"label": "lg", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false,true); changeCommandDetails({grid_rows_lg':3});", "value": "insert_panel", "tooltip": "", "input-type": null},
-			{"label": "lg", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false,true); changeCommandDetails({grid_rows_lg':4});", "value": "insert_panel", "tooltip": "", "input-type": null},
-			{"label": "lg", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false,true); changeCommandDetails({grid_rows_lg':6});", "value": "insert_panel", "tooltip": "", "input-type": null},
-			{"label": "lg", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false,true); changeCommandDetails({grid_rows_lg':12});", "value": "insert_panel", "tooltip": "", "input-type": null}
-		],
-		[
-			{"label": "all", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false); changeCommandDetails({});", "value": "insert_panel", "tooltip": "", "input-type": null},
-			{"label": "all", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false); changeCommandDetails({});", "value": "insert_panel", "tooltip": "", "input-type": null},
-			{"label": "all", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false); changeCommandDetails({});", "value": "insert_panel", "tooltip": "", "input-type": null},
-			{"label": "all", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false); changeCommandDetails({});", "value": "insert_panel", "tooltip": "", "input-type": null},
-			{"label": "all", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false); changeCommandDetails({});", "value": "insert_panel", "tooltip": "", "input-type": null},
-			{"label": "all", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false); changeCommandDetails({});", "value": "insert_panel", "tooltip": "", "input-type": null}
-		]
-	],*/
 	"List group":[
 		[
 			{"label": "Standard", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false)", "value": "insert_standard_list_group", "tooltip": "", "input-type": null},
@@ -490,7 +443,7 @@ function showModal(element,context){
 				containerFluid.appendChild(column);
 				row.appendChild(containerFluid);
 				li.appendChild(row);
-				listGroup.append(li);
+				listGroup.appendChild(li);
 
 				for (var j = 1; j <= 11; j++) {
 					let k = (i + 1) + "_" + j;
@@ -501,9 +454,51 @@ function showModal(element,context){
 					li.appendChild(div);
 				}
 			}
+			body.appendChild(p);
 			body.appendChild(listGroup);
 			accept.setAttribute("title","Each size must have the same number of divisions.");
 			accept.setAttribute("onclick","saveModalData('insert_grid')");
+			break;
+		case "insert_list_group":
+			var containerFluid = document.createElement("DIV");
+			var row1 = document.createElement("DIV");
+			var row2 = document.createElement("DIV");
+			var col1 = document.createElement("DIV");
+			var col2 = document.createElement("DIV");
+			var col3 = document.createElement("DIV");
+			var input = document.createElement("INPUT");
+
+			containerFluid.className = "container-fluid";
+			row1.className = "row";
+			row2.className = "row";
+			col1.className = "col-xs-6 col-sm-6 col-md-6 col-lg-6 btn btn-default";
+			col1.setAttribute("onclick","changeContextData('type','standard'); toggle(this,true);");
+			col2.className = "col-xs-6 col-sm-6 col-md-6 col-lg-6 btn btn-default";
+			col2.setAttribute("onclick","changeContextData('type','clickable'); toggle(this,true);");
+			col3.className = "col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group";
+			input.className = "form-control";
+
+			col1.innerHTML = "Standard";
+			col2.innerHTML = "Clickable";
+			input.setAttribute("placeholder","Rows");
+			input.setAttribute("type","number");
+			input.setAttribute("onchange","changeContextData('rows',this.value)");
+
+			row1.appendChild(col1);
+			row1.appendChild(col2);
+			col3.appendChild(input);
+			row2.appendChild(col3);
+			containerFluid.appendChild(row1);
+			containerFluid.appendChild(row2);
+
+			body.appendChild(containerFluid);
+
+			contextData = {
+				"type": null,
+				"rows": 1
+			};
+
+			accept.setAttribute("onclick","saveModalData('insert_list_group')");
 			break;
 		default:
 			body.innerHTML = "No correct modal context given.";
@@ -580,37 +575,23 @@ function saveModalData(context){ /* TODO */
 				for(let j = 1, p = 1; j <= 11; j++, p++){
 					var key = i + "_" + j;
 					var value = contextData[key];
-
 					if(value){
 						row.push(p);
-						if(j === 11){
-							row.push(1);
-						}
+						if(j === 11) row.push(1);
 						p = 0;
 					}
-					else if(j === 11){
-						row.push(p+1);
-					}
+					else if(j === 11) row.push(p+1);
 				}
 				column.push(row);
 				if(row.length > longestColumn) longestColumn = row.length;
-
 			}
-
-			console.log(column);
 			var realColumn = [];
-
 			for(let i = 0; i < longestColumn; i++){
 				var realRow = [];
-				for(let j = 0; j < 4; j++){
-					realRow.push(column[j][i]);
-					console.log(j,i);
-				}
+				for(let j = 0; j < 4; j++) realRow.push(column[j][i]);
 				realColumn.push(realRow);
 			}
-			console.log(realColumn);
 			var size = ["xs","sm","md","lg"];
-
 			var newrow = document.createElement("DIV");
 			realColumn.forEach(c => {
 				var newcolumn = document.createElement("DIV");
@@ -622,6 +603,37 @@ function saveModalData(context){ /* TODO */
 			});
 			prepareElement(newrow);
 			contextElement.appendChild(newrow);
+			break;
+
+		case "insert_list_group":
+			if(contextData.type !== null){
+				var listGroup;
+				switch (contextData.type) {
+					case "clickable":
+						listGroup = document.createElement("DIV");
+						break;
+					case "standard":
+						listGroup = document.createElement("UL");
+						break;
+				}
+				listGroup.className = "list-group";
+				for(let i = 0; i < contextData.rows; i++){
+					var item;
+					switch(contextData.type){
+						case "clickable":
+							item = document.createElement("A");
+							break;
+						case "standard":
+							item = document.createElement("LI");
+							break;
+					}
+					item.className = "list-group-item";
+					prepareElement(item);
+					listGroup.appendChild(item);
+				}
+				prepareElement(listGroup);
+				contextElement.appendChild(listGroup);
+			}
 			break;
 	}
 
@@ -693,7 +705,7 @@ function useLorem(){
 }
 
 function execute(element,event){
-	if(event.target == element){
+	if(event.target == element && element.classList.contains("every")){
 		command(element);
 	}
 }
@@ -729,6 +741,11 @@ function command(element){
 
 		case "insert_grid":
 			showModal(element,"insert_grid");
+			break;
+
+		case "insert_list_group":
+			showModal(element,"insert_list_group");
+			break;
 
 		case "insert_clickable_list_group":
 			newElement = document.createElement("DIV");
