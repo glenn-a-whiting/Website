@@ -3,6 +3,7 @@ var loremPosition = 0; //Nth word to be begin from on next use.
 
 var width;
 var height;
+var debug;
 
 var settings = {
 	"menuPlacement": 0,
@@ -25,6 +26,9 @@ var menuOptions = {
 		],
 		[
 			{"label": "List Group ...", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false)", "value": "insert_list_group", "tooltip": "", "input-type": null}
+		],
+		[
+			{"label": "Table ...", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false)", "value": "insert_table", "tooltip": "", "input-type": null}
 		]
 	],
 	"Move Menu":[
@@ -86,6 +90,9 @@ var menuOptions = {
 		[
 			{"label": "Edit Styles", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false)", "value": "edit_styles", "tooltip": "", "input-type": null},
 			{"label": "Edit Classes", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false)", "value": "edit_classes", "tooltip": "", "input-type": null}
+		],
+		[
+			{"label": "Edit Text", "extra-classes": "", "extra-attributes":{}, "onclick": "toggle(this,false)", "value": "edit_text", "tooltip": "", "input-type": null}
 		]
 	]
 };
@@ -390,35 +397,27 @@ function showModal(element,context){
 				listGroup.appendChild(li);
 			}
 			body.appendChild(listGroup);
-
 			var tempContextData = {};
 			contextDataKeys.forEach(k => {
 				tempContextData[k] = null;
 			});
 			contextData = tempContextData;
-
 			accept.setAttribute("onclick","saveModalData('edit_styles')");
 			break;
-
 		case "edit_classes":
 			var classes = element.classList;
-
 			var listGroup = document.createElement("UL");
 			listGroup.className = "list-group";
-
 			for (var i = 0; i < classes.length; i++) {
 				var c = classes[i];
 				if(fixedClasses.some(fc => fc == c)) continue;
-
 				var li = document.createElement("LI");
 				li.className = "list-group-item";
 				li.innerHTML = c;
-
 				listGroup.appendChild(li);
 			}
 			body.appendChild(listGroup);
 			break;
-
 		case "insert_grid":
 			var listGroup = document.createElement("UL");
 			listGroup.className = "list-group";
@@ -460,38 +459,21 @@ function showModal(element,context){
 			accept.setAttribute("onclick","saveModalData('insert_grid')");
 			break;
 		case "insert_list_group":
-			var containerFluid = document.createElement("DIV");
-			var row1 = document.createElement("DIV");
-			var row2 = document.createElement("DIV");
-			var col1 = document.createElement("DIV");
-			var col2 = document.createElement("DIV");
-			var col3 = document.createElement("DIV");
-			var input = document.createElement("INPUT");
-
-			containerFluid.className = "container-fluid";
-			row1.className = "row";
-			row2.className = "row";
-			col1.className = "col-xs-6 col-sm-6 col-md-6 col-lg-6 btn btn-default";
-			col1.setAttribute("onclick","changeContextData('type','standard'); toggle(this,true);");
-			col2.className = "col-xs-6 col-sm-6 col-md-6 col-lg-6 btn btn-default";
-			col2.setAttribute("onclick","changeContextData('type','clickable'); toggle(this,true);");
-			col3.className = "col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group";
-			input.className = "form-control";
-
-			col1.innerHTML = "Standard";
-			col2.innerHTML = "Clickable";
-			input.setAttribute("placeholder","Rows");
-			input.setAttribute("type","number");
-			input.setAttribute("onchange","changeContextData('rows',this.value)");
-
-			row1.appendChild(col1);
-			row1.appendChild(col2);
-			col3.appendChild(input);
-			row2.appendChild(col3);
-			containerFluid.appendChild(row1);
-			containerFluid.appendChild(row2);
-
-			body.appendChild(containerFluid);
+			body.innerHTML += "<div class='container-fluid'>\
+				<div class='row'>\
+					<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6 btn btn-default' onclick='changeContextData(\'type\',\'standard\'); toggle(this,true);'>\
+						Standard\
+					</div>\
+					<div class='col-xs-6 col-sm-6 col-md-6 col-lg-6 btn btn-default' onclick='changeContextData(\'type\',\'standard\'); toggle(this,true);'>\
+						Clickable\
+					</div>\
+				</div>\
+				<div class='row'>\
+					<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12 btn btn-default form-group'>\
+						<input class='form-control' type='number' placeholder='ROWS' onchange='changeContextData(\'rows\',this.value)'>\
+					</div>\
+				</div>\
+			</div>";
 
 			contextData = {
 				"type": null,
@@ -500,6 +482,52 @@ function showModal(element,context){
 
 			accept.setAttribute("onclick","saveModalData('insert_list_group')");
 			break;
+		case "insert_table":
+			body.innerHTML += "<ul class='list-group'>\
+				<li class='list-group-item'>\
+					<div class='form-group'>\
+						<input class='form-control' type='number' placeholder='Columns' onchange='changeContextData(\"columns\",this.value)'/>\
+					</div>\
+					<div class='form-group'>\
+						<input class='form-control' type='number' placeholder='Rows' onchange='changeContextData(\"rows\",this.value)'/>\
+					</div>\
+					<form>\
+						<div class='checkbox'><label><input type='checkbox' onchange='changeContextData(\"header\")'/>Header Row</label></div>\
+						<div class='checkbox'><label><input type='checkbox' onchange='changeContextData(\"striped\")'/>Striped</label></div>\
+						<div class='checkbox'><label><input type='checkbox' onchange='changeContextData(\"bordered\")'/>Bordered</label></div>\
+						<div class='checkbox'><label><input type='checkbox' onchange='changeContextData(\"mouseover\")'/>Mouse Over Highlight</label></div>\
+						<div class='checkbox'><label><input type='checkbox' onchange='changeContextData(\"compact\")'/>Compact</label></div>\
+					</form>\
+				</li>\
+			</ul>";
+
+			contextData = {
+				"columns":0,
+				"row":0,
+				"header":false,
+				"striped":false,
+				"bordered":false,
+				"mouseover":false,
+				"compact":false
+			};
+
+			accept.setAttribute("onclick","saveModalData('insert_table')");
+			break;
+
+		case "edit_text":
+			var blocks = innerTextBlocks(element);
+			console.log("blocks: ",blocks);
+			contextData = {
+				"blocks": []
+			};
+			blocks.forEach((b,i) => {
+				body.innerHTML += "<div class='form-group'><textarea class='form-control' rows='4'>" + b + "</textarea></div>";
+				if(i !== blocks.length-1) body.innerHTML += "<hr>";
+				contextData.blocks.push(b);
+			});
+			//accept.setAttribute("onclick","saveModalData('edit_text')");
+			break;
+
 		default:
 			body.innerHTML = "No correct modal context given.";
 			break;
@@ -508,7 +536,8 @@ function showModal(element,context){
 }
 
 function changeContextData(key, value){
-	contextData[key] = value;
+	if(value === undefined) contextData[key] = !contextData[key];
+	else contextData[key] = value;
 }
 
 function gridVerification(){
@@ -566,7 +595,6 @@ function saveModalData(context){ /* TODO */
 			});
 			contextElement.setAttribute("style",inlineStyle);
 			break;
-
 		case "insert_grid":
 			var column = [];
 			var longestColumn = 0;
@@ -604,7 +632,6 @@ function saveModalData(context){ /* TODO */
 			prepareElement(newrow);
 			contextElement.appendChild(newrow);
 			break;
-
 		case "insert_list_group":
 			if(contextData.type !== null){
 				var listGroup;
@@ -634,6 +661,46 @@ function saveModalData(context){ /* TODO */
 				prepareElement(listGroup);
 				contextElement.appendChild(listGroup);
 			}
+			break;
+		case "insert_table":
+			var table = document.createElement("TABLE");
+			table.classList.add("table");
+			if(contextData.striped) table.classList.add("table-striped");
+			if(contextData.bordered) table.classList.add("table-bordered");
+			if(contextData.mouseover) table.classList.add("table-hover");
+			if(contextData.compact) table.classList.add("table-condensed");
+
+			var thead = document.createElement("THEAD");
+			var tbody = document.createElement("TBODY");
+
+			for(let r = 0 - Number(contextData.header); r < Number(contextData.rows); r++){
+				var row = document.createElement("TR");
+				for(let c = 0; c < Number(contextData.columns); c++){
+					var cell;
+					if(r == -1) cell = document.createElement("TH");
+					else cell = document.createElement("TD");
+					cell.innerHTML = r + "," + c;
+					prepareElement(cell);
+					row.appendChild(cell);
+				}
+				prepareElement(row);
+				if(r == -1){
+					thead.appendChild(row);
+				}
+				else{
+					tbody.appendChild(row);
+				}
+			}
+			if(thead.children.length > 0){
+				prepareElement(thead);
+				table.appendChild(thead);
+			}
+
+			prepareElement(tbody);
+			table.appendChild(tbody);
+
+			prepareElement(table);
+			contextElement.appendChild(table);
 			break;
 	}
 
@@ -697,6 +764,85 @@ function borderize(){
 		else{
 			each.classList.remove("borderize");
 		}
+	}
+}
+
+// extracts blocks of text between child elements of given element.
+function innerTextBlocks(element){
+	var text = element.innerHTML;
+	var pattern = /<.+?>/g;
+	var tags = text.match(pattern);
+
+	debug = text;
+
+	if(tags === null){
+		return [text];
+	}
+	else {
+		var tagSets = {};
+		var indexPairs = [];
+		var voidTags = ["area","base","br","col","command","embed","hr","img","input","keygen","link","menuitem","meta","param","source","track","wbr"];
+		console.log(tags.length);
+		for(let offset = 0, tagNum = 0, pair = [0]; tagNum < tags.length; tagNum++){
+			var t;
+			var tag = tags[tagNum];
+			if(tag.charAt(1) == "/"){
+				// closing tag
+				t = tag.substr(0,tags[tagNum].length-1);
+			}
+			else{
+				// opening tag, without attributes.
+				t = tag.split(" ")[0];
+			}
+
+			var keys = Object.keys(tagSets);
+			var index = text.indexOf(tag,offset);
+			if(keys.every(k => tagSets[k] === 0)){
+				if(pair.length === 0){
+					pair.push(index + tag.length);
+				}
+				else if(pair.length === 1){
+					pair.push(index);
+					indexPairs.push(pair);
+					pair = [];
+				}
+				if(tagNum == tags.length-1){
+					pair.push(text.length-1);
+					indexPairs.push(pair);
+				}
+			}
+			console.log(tagSets);
+			if(t.charAt(1) == "/"){
+				console.log("a",tag);
+				// If tag is a closing tag, reduce the count of the opening tag.
+				var openingTag = "<" + t.substr(2);
+				tagSets[openingTag]--;
+			}
+			else if(voidTags.some(vt => tag == ("<" + vt + ">") || tag == ("<" + vt + "/>"))){
+				// if tag is a void (self-closing) tag
+				offset = index + tag.length;
+				console.log("b",tag);
+				continue;
+			}
+			else{
+				console.log("c",tag);
+				if(!(t in tagSets)){
+					tagSets[t] = 0;
+				}
+				tagSets[t]++;
+			}
+
+			offset = index + tag.length;
+		}
+
+		var results = [];
+		for(let i = 0; i < indexPairs.length; i++){
+			let i1 = indexPairs[i][0];
+			let i2 = indexPairs[i][1];
+			results.push(text.substring(i1,i2));
+		}
+		console.log(indexPairs);
+		return results;
 	}
 }
 
@@ -773,6 +919,12 @@ function command(element){
 			break;
 		case "edit_classes":
 			showModal(element,"edit_classes");
+			break;
+		case "insert_table":
+			showModal(element,"insert_table");
+			break;
+		case "edit_text":
+			showModal(element,"edit_text");
 			break;
 		default:
 			break;
