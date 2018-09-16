@@ -574,7 +574,7 @@ function gridVerification(){
 	}
 }
 
-function saveModalData(context){ /* TODO */
+function saveModalData(context){
 	switch(context){
 		case "edit_styles":
 			var inlineStyle = "";
@@ -767,81 +767,71 @@ function borderize(){
 	}
 }
 
+// return pairs of matching indexes
+// inverting returns indexes of regions between matches
+function matchIndexes(text,regex,invert=false){
+	var matches = text.match(regex);
+	var results = [];
+	if(matches !== null){
+		for(let offset = 0, m = 0; m < matches.length; m++){
+			var match = matches[m];
+			var index_a = text.indexOf(match,offset);
+			var index_b = index_a + match.length;
+			results.push([index_a,index_b]);
+			offset = index_b;
+		}
+		if(invert){
+			var temp = [[0]];
+			for(let i = 0; i < results.length; i++){
+				temp[i].push(results[i][0]);
+				temp.push([results[i][1]]);
+			}
+			temp[temp.length-1].push(text.length-1);
+			results = temp;
+		}
+	}
+	return results;
+}
+
 // extracts blocks of text between child elements of given element.
 function innerTextBlocks(element){
 	var text = element.innerHTML;
 	var pattern = /<.+?>/g;
-	var tags = text.match(pattern);
-
+	var voidTags = ["area","base","br","col","command","embed","hr","img","input","keygen","link","menuitem","meta","param","source","track","wbr"];
 	debug = text;
 
-	if(tags === null){
+	var a = [];
+	var b = [];
+	matchIndexes(text,pattern,false).forEach(p => a.push(text.substring(p[0],p[1])));
+	matchIndexes(text,pattern,true).forEach(p => b.push(text.substring(p[0],p[1])));
+
+	if(a.length === 0){
 		return [text];
 	}
 	else {
 		var tagSets = {};
 		var indexPairs = [];
-		var voidTags = ["area","base","br","col","command","embed","hr","img","input","keygen","link","menuitem","meta","param","source","track","wbr"];
-		console.log(tags.length);
-		for(let offset = 0, tagNum = 0, pair = [0]; tagNum < tags.length; tagNum++){
-			var t;
-			var tag = tags[tagNum];
-			if(tag.charAt(1) == "/"){
-				// closing tag
-				t = tag.substr(0,tags[tagNum].length-1);
-			}
-			else{
-				// opening tag, without attributes.
-				t = tag.split(" ")[0];
-			}
-
-			var keys = Object.keys(tagSets);
-			var index = text.indexOf(tag,offset);
-			if(keys.every(k => tagSets[k] === 0)){
-				if(pair.length === 0){
-					pair.push(index + tag.length);
-				}
-				else if(pair.length === 1){
-					pair.push(index);
-					indexPairs.push(pair);
-					pair = [];
-				}
-				if(tagNum == tags.length-1){
-					pair.push(text.length-1);
-					indexPairs.push(pair);
-				}
-			}
-			console.log(tagSets);
-			if(t.charAt(1) == "/"){
-				console.log("a",tag);
-				// If tag is a closing tag, reduce the count of the opening tag.
-				var openingTag = "<" + t.substr(2);
-				tagSets[openingTag]--;
-			}
-			else if(voidTags.some(vt => tag == ("<" + vt + ">") || tag == ("<" + vt + "/>"))){
-				// if tag is a void (self-closing) tag
-				offset = index + tag.length;
-				console.log("b",tag);
-				continue;
-			}
-			else{
-				console.log("c",tag);
-				if(!(t in tagSets)){
-					tagSets[t] = 0;
-				}
-				tagSets[t]++;
-			}
-
-			offset = index + tag.length;
-		}
-
 		var results = [];
-		for(let i = 0; i < indexPairs.length; i++){
-			let i1 = indexPairs[i][0];
-			let i2 = indexPairs[i][1];
-			results.push(text.substring(i1,i2));
-		}
-		console.log(indexPairs);
+		a.forEach((tag,i) => {
+			if(Object.keys(tagSets).every(k => tagSets[k] === 0)){
+				var s = b[i].trim();
+				if(s.length > 0) results.push(s);
+			}
+			if(voidTags.every(vt => vt !== tag.substr(1,tag.length-2))){
+				if(tag.charAt(1) == "/"){
+					var t = tag.substr(2,tag.length-3);
+					tagSets[t]--;
+				}
+				else{
+					var t = tag.substr(1,tag.length-2).split(" ")[0];
+					if(!(t in tagSets)) tagSets[t] = 0;
+					tagSets[t]++;
+				}
+			}
+		});
+		var s = b[b.length-1].trim();
+		if(s.length > 0) results.push(s);
+
 		return results;
 	}
 }

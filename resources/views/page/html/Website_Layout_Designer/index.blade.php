@@ -17,9 +17,9 @@
 						eu justo vehicula pellentesque id ut arcu. Maecenas et est commodo, tempor leo at, finibus lacus. Ut tristique, ligula ut malesuada ultrices, metus sem viverra
 					</div>
 				</div>
-				<br/>
+				<br>
 				two
-				<br/>
+				<br>
 				<div class="container every" onclick="execute(this,event)">
 					gravida mi pretium. Aenean massa tortor, porttitor in neque sit amet, cursus vestibulum ligula. Praesent at sollicitudin lorem, lacinia commodo diam. Sed auctor interdum ullamcorper. Vestibulum varius ligula quis orci tincidunt, vehicula aliquet elit consequat. Quisque elementum augue
 					<div class="container every" onclick="execute(this,event)">
@@ -29,9 +29,9 @@
 						In nec imperdiet eros. Sed auctor urna in imperdiet iaculis. Etiam ipsum
 					</div>
 				</div>
-				<br/>
+				<br>
 				three
-				<br/>
+				<br>
 				<div class="container every" onclick="execute(this,event)">
 					<div class="container every" onclick="execute(this,event)">
 						risus, vulputate in odio quis, vehicula condimentum leo. Fusce vitae dapibus enim. Vivamus efficitur risus
@@ -43,7 +43,7 @@
 						eu justo vehicula pellentesque id ut arcu. Maecenas et est commodo, tempor leo at, finibus lacus. Ut tristique, ligula ut malesuada ultrices, metus sem viverra
 					</div>
 				</div>
-				<br/>
+				<br>
 				four
 			</div>
 
