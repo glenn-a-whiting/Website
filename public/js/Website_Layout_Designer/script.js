@@ -348,6 +348,14 @@ function formatName(string){
 	return res.slice(0,res.length-1);
 }
 
+function editTextUpdate(element){
+	var children = element.parentNode.getElementsByTagName("textarea");
+	for(let i = 0; i < children.length; i++){
+		let child = children[i];
+		contextData.blocks[i].block = child.innerHTML;
+	}
+}
+
 function showModal(element,context){
 	contextElement = element;
 	var modal = document.getElementById("modal");
@@ -516,16 +524,20 @@ function showModal(element,context){
 
 		case "edit_text":
 			var blocks = innerTextBlocks(element);
-			console.log("blocks: ",blocks);
 			contextData = {
-				"blocks": []
+				"blocks": [
+
+				]
 			};
-			blocks.forEach((b,i) => {
-				body.innerHTML += "<div class='form-group'><textarea class='form-control' rows='4'>" + b + "</textarea></div>";
+			blocks.blocks.forEach((b,i) => {
+				body.innerHTML += "<div class='form-group'><textarea class='form-control' rows='4' onchange='editTextUpdate(this)'>" + b + "</textarea></div>";
 				if(i !== blocks.length-1) body.innerHTML += "<hr>";
-				contextData.blocks.push(b);
+				contextData.blocks.push({
+					"block":b,
+					"indexes":blocks.indexes[i]
+				});
 			});
-			//accept.setAttribute("onclick","saveModalData('edit_text')");
+			accept.setAttribute("onclick","saveModalData('edit_text')");
 			break;
 
 		default:
@@ -702,6 +714,13 @@ function saveModalData(context){
 			prepareElement(table);
 			contextElement.appendChild(table);
 			break;
+		case "edit_text":
+			for(let i = contextData.blocks.length-1; i >= 0; i++){
+				var text = contextData.blocks[i].block;
+				var indexes = contextData.blocks[i].indexes;
+				contextElement.innerHTML = contextElement.innerHTML.substring(0,indexes[0]) + text + contextElement.innerHTML.substring(indexes[1]);
+			}
+			break;
 	}
 
 	//clean up after data is submitted.
@@ -802,8 +821,10 @@ function innerTextBlocks(element){
 
 	var a = [];
 	var b = [];
-	matchIndexes(text,pattern,false).forEach(p => a.push(text.substring(p[0],p[1])));
-	matchIndexes(text,pattern,true).forEach(p => b.push(text.substring(p[0],p[1])));
+	var c = matchIndexes(text,pattern,false);
+	var d = matchIndexes(text,pattern,true);
+	c.forEach(p => a.push(text.substring(p[0],p[1])));
+	d.forEach(p => b.push(text.substring(p[0],p[1])));
 
 	if(a.length === 0){
 		return [text];
@@ -812,10 +833,14 @@ function innerTextBlocks(element){
 		var tagSets = {};
 		var indexPairs = [];
 		var results = [];
+		var coords = [];
 		a.forEach((tag,i) => {
 			if(Object.keys(tagSets).every(k => tagSets[k] === 0)){
 				var s = b[i].trim();
-				if(s.length > 0) results.push(s);
+				if(s.length > 0) {
+					results.push(s);
+					coords.push(d[i]);
+				}
 			}
 			if(voidTags.every(vt => vt !== tag.substr(1,tag.length-2))){
 				if(tag.charAt(1) == "/"){
@@ -830,9 +855,12 @@ function innerTextBlocks(element){
 			}
 		});
 		var s = b[b.length-1].trim();
-		if(s.length > 0) results.push(s);
+		if(s.length > 0) {
+			results.push(s);
+			coords.push(d[i]);
+		}
 
-		return results;
+		return {"blocks":results,"indexes":coords};
 	}
 }
 
