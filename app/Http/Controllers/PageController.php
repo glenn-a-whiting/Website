@@ -14,11 +14,16 @@ class PageController extends Controller
 	}
 
 	public function page($lang){
-		$pages = Page::PAGES[$lang];
-		return view("page",[
-			"heading" => $lang,
-			"pages" => $pages
-		]);
+		switch($lang){
+			case "game":
+				return view("page.game.index");
+			default:
+				$pages = Page::PAGES[$lang];
+				return view("page",[
+					"heading" => $lang,
+					"pages" => $pages
+				]);
+		}
 	}
 
 	public function specific($lang,$page){
