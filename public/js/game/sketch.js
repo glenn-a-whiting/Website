@@ -154,7 +154,7 @@ function draw() {
     translate(cameraOffset.x,cameraOffset.y);
 
     // Draw enemies
-    swarm(!(keyIsDown(69)));
+    swarm(keyIsDown(69));
     enemies.forEach(e => {
       if(!e.dead){
         fill(e.health,127,127);
