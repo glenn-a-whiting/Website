@@ -44,7 +44,7 @@ function setup() {
   };
 
   enemies = [];
-  for(let i = 0, r1 = 100, r2 = 2000; i < 1000; i++){
+  for(let i = 0, r1 = 100, r2 = 2000; i < 1000;){
     let a = random(0,TWO_PI);
 	var powerup;
 	if(random(50) < 1){
@@ -52,6 +52,7 @@ function setup() {
 	}
 	else{
 		powerup = null;
+		i++;
 	}
 
     append(enemies,{
