@@ -46,14 +46,26 @@ function setup() {
   enemies = [];
   for(let i = 0, r1 = 100, r2 = 2000; i < 1000; i++){
     let a = random(0,TWO_PI);
+	var powerup;
+	if(random(50) < 1){
+		powerup = "machineGun";
+	}
+	else{
+		powerup = null;
+	}
+
     append(enemies,{
       "x":playerX + cos(a) * random(r1,r2),
       "y":playerY + sin(a) * random(r1,r2),
       "s":enemySize,
       "health":100,
+	  "powerup":powerup,
       "dead":false
     });
   }
+
+  playerPowerup = null;
+  powerupCharge = 0;
 
   score = 0;
   started = false;
@@ -154,11 +166,19 @@ function draw() {
     translate(cameraOffset.x,cameraOffset.y);
 
     // Draw enemies
-    swarm(!keyIsDown(69));
+    swarm();
     enemies.forEach(e => {
       if(!e.dead){
-        fill(e.health,127,127);
-      	ellipse(e.x,e.y,e.s);
+		  switch(e.powerup){
+			  case "machineGun":
+			  	fill("blue");
+				rect(e.x - e.s/2, e.y - e.s/2, e.s, e.s);
+			  	break;
+			case null:
+			  	fill(e.health,127,127);
+	        	ellipse(e.x,e.y,e.s);
+				break;
+		  }
       }
     });
 
@@ -169,14 +189,38 @@ function draw() {
 
     translate(-cameraOffset.x,-cameraOffset.y);
     text("score: "+score,50,15);
+	if(playerPowerup !== null){
+		text(playerPowerup + ": ", 60, 40);
+		text(powerupCharge, 150, 40);
+	}
 
     // Draw gun shot
     fill("white");
     stroke("black");
     if(mouseIsPressed || (keyIsPressed && keyIsDown(32))){
-      if(charge < chargeMax){
-        charge += chargeRate;
-      }
+		if(playerPowerup == "machineGun"){
+			powerupCharge--;
+			if(powerupCharge === 0){
+				playerPowerup = null;
+			}
+			let x1 = playerX + cos(angle+HALF_PI) * 5;
+	        let y1 = playerY + sin(angle+HALF_PI) * 5;
+	        let x2 = playerX + cos(angle-HALF_PI) * 5;
+	        let y2 = playerY + sin(angle-HALF_PI) * 5;
+	        let x3_ = playerX + cos(angle) * 1000;
+	        let y3_ = playerY + sin(angle) * 1000;
+	        let x3 = x3_ + cos(angle+HALF_PI) * 5;
+	        let y3 = y3_ + sin(angle+HALF_PI) * 5;
+	        let x4 = x3_ + cos(angle-HALF_PI) * 5;
+	        let y4 = y3_ + sin(angle-HALF_PI) * 5;
+
+			fill("red");
+	        quad(x1,y1,x2,y2,x4,y4,x3,y3);
+	        kill();
+		}
+	   	else if(charge < chargeMax){
+	    	charge += chargeRate;
+	    }
     }
     else{
       if(charge > 0){
@@ -261,21 +305,33 @@ function mousePressed(){
   }
 }
 
-function swarm(hit){
+function swarm(){
   enemies.forEach(e => {
     if(!e.dead){
-      let x = playerX - cameraOffset.x;
-      let y = playerY - cameraOffset.y;
+	      let x = playerX - cameraOffset.x;
+	      let y = playerY - cameraOffset.y;
+		  if(e.powerup === null){
+	      	let a = atan2(e.y - y, e.x - x);
+	      	e.x += cos(a+PI) * enemySpeed;
+	      	e.y += sin(a+PI) * enemySpeed;
+	  	}
 
-      let a = atan2(e.y - y, e.x - x);
-      e.x += cos(a+PI) * enemySpeed;
-      e.y += sin(a+PI) * enemySpeed;
-	  // holding E makes you invulnerable
-      if((dist(e.x,e.y,x,y) < playerSize/2) && hit){
-        noLoop();
-        stroke("red");
-        fill("red");
-        text("Game Over",(width/2) - cameraOffset.x,(height/2) - cameraOffset.y);
+      if(dist(e.x,e.y,x,y) < playerSize/2){
+		  if(e.powerup == null){
+	        noLoop();
+	        stroke("red");
+	        fill("red");
+	        text("Game Over",(width/2) - cameraOffset.x,(height/2) - cameraOffset.y);
+		}
+		else{
+			e.dead = true;
+			switch(e.powerup){
+				case "machineGun":
+					playerPowerup = "machineGun";
+					powerupCharge = 1000;
+					break;
+			}
+		}
       }
     }
   });
@@ -283,7 +339,7 @@ function swarm(hit){
 
 function kill(){
   let x1 = playerX + cos(angle+HALF_PI) * ((charge/2) + enemySize);
-	let y1 = playerY + sin(angle+HALF_PI) * ((charge/2) + enemySize);
+  let y1 = playerY + sin(angle+HALF_PI) * ((charge/2) + enemySize);
   let x2 = playerX + cos(angle-HALF_PI) * ((charge/2) + enemySize);
   let y2 = playerY + sin(angle-HALF_PI) * ((charge/2) + enemySize);
   let x3_ = playerX + cos(angle) * 1000;
@@ -293,7 +349,7 @@ function kill(){
   let x4 = x3_ + cos(angle-HALF_PI) * ((charge/2) - enemySize);
   let y4 = y3_ + sin(angle-HALF_PI) * ((charge/2) - enemySize);
   enemies.forEach((e,i) => {
-    if(!e.dead){
+    if(!e.dead && e.powerup === null){
       let inBlast = pointInPolygon(e.x,e.y,[
         [x1 - cameraOffset.x, y1 - cameraOffset.y],
         [x2 - cameraOffset.x, y2 - cameraOffset.y],
