@@ -270,8 +270,8 @@ function swarm(){
       let a = atan2(e.y - y, e.x - x);
       e.x += cos(a+PI) * enemySpeed;
       e.y += sin(a+PI) * enemySpeed;
-
-      if(dist(e.x,e.y,x,y) < playerSize/2){
+	  // holding ctrl makes you invulnerable
+      if(dist(e.x,e.y,x,y) < playerSize/2 && !keyIsDown(17)){
         noLoop();
         stroke("red");
         fill("red");
