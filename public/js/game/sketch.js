@@ -154,7 +154,7 @@ function draw() {
     translate(cameraOffset.x,cameraOffset.y);
 
     // Draw enemies
-    swarm();
+    swarm(!(keyIsDown(69)));
     enemies.forEach(e => {
       if(!e.dead){
         fill(e.health,127,127);
@@ -261,7 +261,7 @@ function mousePressed(){
   }
 }
 
-function swarm(){
+function swarm(hit){
   enemies.forEach(e => {
     if(!e.dead){
       let x = playerX - cameraOffset.x;
@@ -271,7 +271,7 @@ function swarm(){
       e.x += cos(a+PI) * enemySpeed;
       e.y += sin(a+PI) * enemySpeed;
 	  // holding E makes you invulnerable
-      if(dist(e.x,e.y,x,y) < playerSize/2 && !keyIsDown(69)){
+      if(dist(e.x,e.y,x,y) < playerSize/2 && hit){
         noLoop();
         stroke("red");
         fill("red");
