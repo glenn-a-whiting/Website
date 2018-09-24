@@ -16,6 +16,8 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   frameRate(60);
 
+  gameMode = "mouse";
+
   waitTimer = 3;
 
   charge = 0;
@@ -26,6 +28,7 @@ function setup() {
   playerY = height/2;
   playerSize = 10;
   playerSpeed = 1;
+  playerBaseSpeed = 1;
 
   angle = 0;
   enemySpeed = 0.1;
@@ -44,11 +47,13 @@ function setup() {
   };
 
   enemies = [];
-  for(let i = 0, r1 = 100, r2 = 2000; i < 1000;){
+  for(let i = 0, r1 = 100, r2 = 10000; i < 10000;){
     let a = random(0,TWO_PI);
+	let s = enemySize;
 	var powerup;
 	if(random(50) < 1){
-		powerup = "machineGun";
+		powerup = random(["machineGun","bomb","turbo"]);
+		s = enemySize * 2;
 	}
 	else{
 		powerup = null;
@@ -58,14 +63,27 @@ function setup() {
     append(enemies,{
       "x":playerX + cos(a) * random(r1,r2),
       "y":playerY + sin(a) * random(r1,r2),
-      "s":enemySize,
+      "s":s,
       "health":100,
 	  "powerup":powerup,
       "dead":false
     });
+
+	if(i === 0){
+		let a = random(0,TWO_PI);
+		append(enemies,{
+		  	"x":playerX + cos(a) * random(r1,r2),
+		  	"y":playerY + sin(a) * random(r1,r2),
+		  	"s":enemySize,
+		  	"health":100,
+		  	"powerup":"superBomb",
+		  	"dead":false
+	    });
+	}
   }
 
   playerPowerup = null;
+  powerupMax = 0;
   powerupCharge = 0;
 
   score = 0;
@@ -79,17 +97,31 @@ function setup() {
 function draw() {
   background(220);
   if(frameCount > 1){
-    if(keyIsDown(16)) playerSpeed = 0.25;
-    else playerSpeed = 1.0;
+	if(playerPowerup == "turbo"){
+		powerupCharge--;
+		if(powerupCharge === 0) playerPowerup = null;
+
+		if(keyIsDown(16)) playerSpeed = 2.5;
+	    else playerSpeed = 15.0;
+	}
+	else{
+		if(keyIsDown(16)) playerSpeed = 0.25;
+	    else playerSpeed = 2.0;
+	}
 
     // Player Motion
-    if(keyIsPressed){
-      if(keyIsDown(65)){ // A
-        angle -= playerSpeed / 10;
-      }
-      if(keyIsDown(68)){ // D
-        angle += playerSpeed / 10;
-      }
+    if(keyIsPressed && gameMode == "keyboard" || gameMode == "mouse"){
+		if(gameMode == "keyboard"){
+		  if(keyIsDown(65)){ // A
+		    angle -= playerBaseSpeed / (10);
+		  }
+		  if(keyIsDown(68)){ // D
+		    angle += playerBaseSpeed / (10);
+		  }
+		}
+		else{
+			angle = atan2(mouseY - playerY, mouseX - playerX);
+		}
 
       if(keyIsDown(87)){ // W
         playerX += cos(angle) * playerSpeed;
@@ -169,18 +201,30 @@ function draw() {
     // Draw enemies
     swarm();
     enemies.forEach(e => {
-      if(!e.dead){
-		  switch(e.powerup){
-			  case "machineGun":
-			  	fill("blue");
-				rect(e.x - e.s/2, e.y - e.s/2, e.s, e.s);
-			  	break;
-			case null:
-			  	fill(e.health,127,127);
-	        	ellipse(e.x,e.y,e.s);
-				break;
-		  }
-      }
+    	if(!e.dead && ((e.x + cameraOffset.x) > 0 && (e.x + cameraOffset.x) < width && (e.y + cameraOffset.y) > 0 && (e.y + cameraOffset.y) < height)){
+			switch(e.powerup){
+				case "machineGun":
+				  	fill("blue");
+					rect(e.x - e.s/2, e.y - e.s/2, e.s, e.s);
+				  	break;
+				case "bomb":
+					fill("grey");
+					rect(e.x - e.s/2, e.y - e.s/2, e.s, e.s);
+					break;
+				case "superBomb":
+						fill("black");
+						rect(e.x - e.s/2, e.y - e.s/2, e.s, e.s);
+						break;
+				case "turbo":
+					fill("magenta");
+					rect(e.x - e.s/2, e.y - e.s/2, e.s, e.s);
+					break;
+				case null:
+				  	fill(e.health,127,127);
+		        	ellipse(e.x,e.y,e.s);
+					break;
+			}
+      	}
     });
 
 
@@ -190,9 +234,15 @@ function draw() {
 
     translate(-cameraOffset.x,-cameraOffset.y);
     text("score: "+score,50,15);
-	if(playerPowerup !== null){
-		text(playerPowerup + ": ", 60, 40);
-		text(powerupCharge, 150, 40);
+	switch(playerPowerup){
+		case "machineGun":
+			text(playerPowerup + ": ", 60, 40);
+			text(powerupCharge, 150, 40);
+			break;
+		case "turbo":
+			text(playerPowerup + ": ", 60, 40);
+			text(floor(powerupCharge/60), 150, 40);
+			break;
 	}
 
     // Draw gun shot
@@ -224,32 +274,32 @@ function draw() {
 	    }
     }
     else{
-      if(charge > 0){
-        let x1 = playerX + cos(angle+HALF_PI) * charge/2;
-        let y1 = playerY + sin(angle+HALF_PI) * charge/2;
-        let x2 = playerX + cos(angle-HALF_PI) * charge/2;
-        let y2 = playerY + sin(angle-HALF_PI) * charge/2;
-        let x3_ = playerX + cos(angle) * 1000;
-        let y3_ = playerY + sin(angle) * 1000;
-        let x3 = x3_ + cos(angle+HALF_PI) * charge/2;
-        let y3 = y3_ + sin(angle+HALF_PI) * charge/2;
-        let x4 = x3_ + cos(angle-HALF_PI) * charge/2;
-        let y4 = y3_ + sin(angle-HALF_PI) * charge/2;
+    	if(charge > 0){
+	        let x1 = playerX + cos(angle+HALF_PI) * charge/2;
+	        let y1 = playerY + sin(angle+HALF_PI) * charge/2;
+	        let x2 = playerX + cos(angle-HALF_PI) * charge/2;
+	        let y2 = playerY + sin(angle-HALF_PI) * charge/2;
+	        let x3_ = playerX + cos(angle) * 1000;
+	        let y3_ = playerY + sin(angle) * 1000;
+	        let x3 = x3_ + cos(angle+HALF_PI) * charge/2;
+	        let y3 = y3_ + sin(angle+HALF_PI) * charge/2;
+	        let x4 = x3_ + cos(angle-HALF_PI) * charge/2;
+	        let y4 = y3_ + sin(angle-HALF_PI) * charge/2;
 
-        quad(x1,y1,x2,y2,x4,y4,x3,y3);
-        kill();
-        charge = 0;
-      }
+	        quad(x1,y1,x2,y2,x4,y4,x3,y3);
+	        kill();
+	        charge = 0;
+	    }
     }
 
     // Draw player
     triangle(
-      playerX + cos(angle) * playerSize,
-      playerY + sin(angle) * playerSize,
-      playerX + cos(angle+HALF_PI) * playerSize/2,
-      playerY + sin(angle+HALF_PI) * playerSize/2,
-      playerX + cos(angle-HALF_PI) * playerSize/2,
-      playerY + sin(angle-HALF_PI) * playerSize/2
+    	playerX + cos(angle) * playerSize,
+    	playerY + sin(angle) * playerSize,
+    	playerX + cos(angle+HALF_PI) * playerSize/2,
+    	playerY + sin(angle+HALF_PI) * playerSize/2,
+    	playerX + cos(angle-HALF_PI) * playerSize/2,
+    	playerY + sin(angle-HALF_PI) * playerSize/2
     );
 
 
@@ -262,23 +312,27 @@ function draw() {
     // Draw charge bubble
     noFill();
     ellipse(playerX,playerY,charge);
-    fill("white");
+
+	// draw powerup bubble
+	if(playerPowerup !== null){
+		arc(playerX,playerY,60,60,-HALF_PI,(TWO_PI - TWO_PI*((powerupMax - powerupCharge)/powerupMax)) - HALF_PI);
+	}
   }
   else{
     // Pre-game screen
     fill("white");
     stroke("black");
     triangle(
-      playerX + cos(angle) * playerSize,
-      playerY + sin(angle) * playerSize,
-      playerX + cos(angle+HALF_PI) * playerSize/2,
-      playerY + sin(angle+HALF_PI) * playerSize/2,
-      playerX + cos(angle-HALF_PI) * playerSize/2,
-      playerY + sin(angle-HALF_PI) * playerSize/2
+    	playerX + cos(angle) * playerSize,
+    	playerY + sin(angle) * playerSize,
+    	playerX + cos(angle+HALF_PI) * playerSize/2,
+    	playerY + sin(angle+HALF_PI) * playerSize/2,
+    	playerX + cos(angle-HALF_PI) * playerSize/2,
+    	playerY + sin(angle-HALF_PI) * playerSize/2
     );
     enemies.forEach(e => {
-      fill(100,127,127);
-      ellipse(e.x,e.y,e.s);
+    	fill(100,127,127);
+    	ellipse(e.x,e.y,e.s);
     });
 
     fill("black");
@@ -287,7 +341,7 @@ function draw() {
          "W/S: forward/backward\n"+
          "A/D: turn\nspace: charge gun"+
          "\n\n"+
-         "higher charge covers more area, but does less damage",width/2,height/2 + 30);
+         "higher charge covers more area, but does less damage\n\nPowerups:\nPurple: Turbo\nBlue: Machine Gun\nGrey: Bomb\nBlack: Super Bomb",width/2,height/2 + 30);
 
   }
 }
@@ -295,6 +349,7 @@ function draw() {
 function keyPressed(){
   if(keyCode == 32 && !started){
     started = true;
+	gameMode = "keyboard";
     loop();
   }
 }
@@ -302,6 +357,7 @@ function keyPressed(){
 function mousePressed(){
   if(!started){
     start = true;
+	gameMode = "mouse";
   	loop();
   }
 }
@@ -309,31 +365,62 @@ function mousePressed(){
 function swarm(){
   enemies.forEach(e => {
     if(!e.dead){
-	      let x = playerX - cameraOffset.x;
-	      let y = playerY - cameraOffset.y;
-		  if(e.powerup === null){
+	    let x = playerX - cameraOffset.x;
+	    let y = playerY - cameraOffset.y;
+		if(e.powerup === null){
 	      	let a = atan2(e.y - y, e.x - x);
 	      	e.x += cos(a+PI) * enemySpeed;
 	      	e.y += sin(a+PI) * enemySpeed;
 	  	}
 
-      if(dist(e.x,e.y,x,y) < playerSize/2){
-		  if(e.powerup == null){
-	        noLoop();
-	        stroke("red");
-	        fill("red");
-	        text("Game Over",(width/2) - cameraOffset.x,(height/2) - cameraOffset.y);
-		}
-		else{
-			e.dead = true;
+	    if(dist(e.x,e.y,x,y) < e.s){
 			switch(e.powerup){
 				case "machineGun":
+					e.dead = true;
 					playerPowerup = "machineGun";
 					powerupCharge = 1000;
+					powerupMax = 1000;
+					break;
+				case "bomb":
+					e.dead = true;
+					fill("red");
+					ellipse(e.x,e.y,1000);
+					enemies.forEach(e2 => {
+						if(e2.powerup === null && dist(e.x,e.y,e2.x,e2.y) < 500){
+							e2.dead = true;
+							enemySpeed += 0.001;
+							score++;
+						}
+					});
+					break;
+				case "superBomb":
+						e.dead = true;
+						fill("red");
+						ellipse(e.x,e.y,10000);
+						enemies.forEach(e2 => {
+							if(e2.powerup === null && dist(e.x,e.y,e2.x,e2.y) < 5000){
+								e2.dead = true;
+								enemySpeed += 0.001;
+								score++;
+							}
+						});
+						break;
+				case "turbo":
+					e.dead = true;
+					playerPowerup = "turbo";
+					powerupCharge = 60 * 20;
+					powerupMax = 60 * 20;
+					break;
+				case null:
+					if(playerPowerup != "turbo"){
+						noLoop();
+						stroke("red");
+						fill("red");
+						text("Game Over",(width/2) - cameraOffset.x,(height/2) - cameraOffset.y);
+					}
 					break;
 			}
-		}
-      }
+	    }
     }
   });
 }
@@ -361,7 +448,7 @@ function kill(){
         e.health -= 110 - (charge/2);
         if(e.health <= 0){
         	e.dead = true;
-        	enemySpeed += 0.01;
+        	enemySpeed += 0.001;
           score++;
         }
       }
