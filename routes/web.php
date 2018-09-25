@@ -11,11 +11,10 @@
 |
 */
 
-Route::get('/', function () {
+/*Route::get('/', function () {
     return view('welcome');
-});
+});*/
 
 Route::get("/","PageController@index");
 Route::get("/{lang}","PageController@page");
-Route::get("/{lang}/{page}","PageController@specific");
-Route::get("/{lang}/{page}/{directory}","PageController@subdirectory");
+Route::get("/{page}/{directory}","PageController@subdirectory");

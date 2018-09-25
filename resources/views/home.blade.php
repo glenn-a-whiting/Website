@@ -1,6 +1,61 @@
 <!doctype html>
 <html lang="{{ app()->getLocale() }}">
 	@include ("partials.head")
+	<style>
+		#main {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+		}
+		.content {
+			display: inline-flex;
+			flex-wrap: nowrap;
+			align-items: center;
+			justify-content: center;
+			width: 150px;
+			height: 120px;
+
+			background-color: white;
+			margin: 20px;
+			border-radius: 5px;
+			border: 1px solid black;
+
+			cursor: pointer;
+
+			transition: border-radius 0.25s, background-color 0.25s;
+			text-decoration: none;
+		}
+
+		.content:hover {
+			border-radius: 10px;
+		}
+
+		.content span {
+			position: absolute;
+			pointer-events: none;
+			text-align: center;
+			color: black;
+			font-weight: bold;
+			text-shadow: 0px 0px 5px #ffffff;
+		}
+
+		.content img {
+			width: 150px;
+			height: 120px;
+
+			filter: opacity(25%);
+			border-radius: 5px;
+			border: 1px solid black;
+			transition: border-radius 0.25s, background-color 0.25s, filter 0.25s;
+		}
+
+		.content img:hover {
+			filter: opacity(90%);
+			border-radius: 10px;
+			background-color: black;
+			text-decoration: none;
+		}
+	</style>
 	<body>
 		<!--
 		<nav class="navbar navbar-inverse">
@@ -18,30 +73,20 @@
 		</nav>
 		-->
 
-		<div class="jumbotron text-center">
+		<div class="well text-center">
 			<h1>Glenn Whiting's Portfolio</h1>
 			<h4>A collection of created content in several languages</h4>
 		</div>
 
-		@foreach ($pages as $language => $page)
-			<div class="well text-center">
-				<h2>{{ $language }}</h2>
-				@if (strlen($page["description"]) > 0)
-				<h4>{{ $page["description"] }}</h4>
-				@endif
-			</div>
-			<div class="row sampleRow">
-				<div class="col-sm-11 sampleImage">
-					<a href="/{{ $language }}">
-						<img src="{{ $page[array_keys($page)[1]]['thumbnail'] }}" width="100%">
-					</a>
-				</div>
-				<a href="/{{ $language }}">
-					<div class="hidden-md-down col-sm-1 btn btn-info sampleButton">
-						<span class="glyphicon glyphicon-chevron-right"></span>
-					</div>
+		<div id="main" class="container">
+			@foreach ($pages as $title => $page)
+				<a href="/{{$title}}" class="container content">
+					<img src="{{ $page['thumbnail'] }}"/>
+					<span>
+						{{ implode(" ", explode("_", $title)) }}
+					</span>
 				</a>
-			</div>
-		@endforeach
+			@endforeach
+		</div>
 	</body>
 </html>

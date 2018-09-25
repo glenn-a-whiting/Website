@@ -13,24 +13,11 @@ class PageController extends Controller
 		]);
 	}
 
-	public function page($lang){
-		switch($lang){
-			case "game":
-				return view("page.game.index");
-			default:
-				$pages = Page::PAGES[$lang];
-				return view("page",[
-					"heading" => $lang,
-					"pages" => $pages
-				]);
-		}
+	public function page($page){
+		return view("page.".$page.".index",Page::PAGES[$page])->with("page",$page);
 	}
 
-	public function specific($lang,$page){
-		return view("page.".$lang.".".$page.".index",Page::PAGES[$lang][$page])->with("page",$page);
-	}
-
-	public function subdirectory($lang,$page,$directory){
-		return view("page.".$lang.".".$page.".".$directory,Page::PAGES[$lang][$page])->with("page",$page);
+	public function subdirectory($page,$directory){
+		return view("page.".$page.".".$directory,Page::PAGES[$page])->with("page",$page);
 	}
 }
