@@ -12,6 +12,11 @@ class Page extends Model
 			"thumbnail" => "https://i.imgur.com/or8abx8.png",
 			"data" => ""
 		],
+		"Survival_Game" => [
+			"description" => "A simple shooting survival game. Enemies become harder to kill as you progress.",
+			"thumbnail" => "https://i.imgur.com/cGc03Jp.png",
+			"data" => ""
+		],
 		"Jacks_Pancakes" => [
 			"description" => "End-semester Website made in university. Employs PHP content rendering, loading from a file-based database, custom vanilla css.",
 			"thumbnail" => "https://i.imgur.com/BbdMDn5.png",
