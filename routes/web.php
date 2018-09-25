@@ -16,5 +16,5 @@
 });*/
 
 Route::get("/","PageController@index");
-Route::get("/{lang}","PageController@page");
+Route::get("/{page}","PageController@page");
 Route::get("/{page}/{directory}","PageController@subdirectory");

@@ -25,7 +25,7 @@
 	</head>
 	<body>
 		<div id="left">
-			<img id="image" src="{{asset('images/image.php')}}?reset=true" onclick="changeSrc(event,this)"/>
+			<img id="image" src="{{asset('resources'.'/image.php')}}?reset=true" onclick="changeSrc(event,this)"/>
 			<button onclick="resetSrc()">Reset</button>
 		</div>
 

@@ -9,6 +9,6 @@
 
   </head>
   <body>
-    <script src="{{asset($page.'/sketch.js')}}"></script>
+    <script src="{{asset('resources/'.$page.'/sketch.js')}}"></script>
   </body>
 </html>

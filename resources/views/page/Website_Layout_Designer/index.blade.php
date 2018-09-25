@@ -1,11 +1,11 @@
 <html onclick="mousePressed(event)" onmousemove="mouseMoved(event)">
 	<head>
 		<title>Bootstrap Layouter</title>
-		<script src="{{asset($page.'/script.js')}}"></script>
+		<script src="{{asset('resources/'.$page.'/script.js')}}"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
-		<link rel="stylesheet" href="{{asset($page.'/style.css')}}"/>
+		<link rel="stylesheet" href="{{asset('resources/'.$page.'/style.css')}}"/>
 	</head>
 	<body onresize="screenResized(this)" onload="afterLoad(this)">
 		<!-- User-created elements -->

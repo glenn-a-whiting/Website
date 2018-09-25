@@ -8,8 +8,8 @@
             Jack's Pancakes Home page
         </title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" media="(min-device-width:300px)" href="{{asset($page.'/astyle.css')}}">
-        <link rel="stylesheet" media="(max-device-width:299px)" href="{{asset($page.'/amobile.css')}}">
+        <link rel="stylesheet" media="(min-device-width:300px)" href="{{asset('resources/'.$page.'/astyle.css')}}">
+        <link rel="stylesheet" media="(max-device-width:299px)" href="{{asset('resources/'.$page.'/amobile.css')}}">
     </head>
     <body>
         <div class ="banner">
@@ -19,7 +19,7 @@
                     Jack's
                     </div>
                     <div class="titleImage">
-                        <img src="{{asset($page.'/pancakes.png')}}"/>
+                        <img src="{{asset('resources/'.$page.'/pancakes.png')}}"/>
                     </div>
                     <div class="titleSpan">
                     Pancakes
@@ -42,7 +42,7 @@
             <div class="contentContainer">
                 <div class="content" id="homepage">
                     <div class="contentImage">
-                        <img src="{{asset($page.'/pancakes.png')}}" height="200px"/>
+                        <img src="{{asset('resources/'.$page.'/pancakes.png')}}" height="200px"/>
                     </div>
                     <div class="contentText">
                         <h2>

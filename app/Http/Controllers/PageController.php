@@ -10,7 +10,7 @@ class PageController extends Controller
     public function index(){
 		return view("home",[
 			"pages" => Page::PAGES
-		]);
+		])->with("p","ROOT");
 	}
 
 	public function page($page){

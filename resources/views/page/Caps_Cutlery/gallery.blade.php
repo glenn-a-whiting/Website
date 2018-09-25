@@ -26,8 +26,8 @@
             <p>
                 Have a great gander at my store! but once you're done mate, come buy some stuff.
             </p>
-            <img src="{{asset('css/Caps_Cutlery/StoreInterior1.JPG')}}" style="height:200px"/>
-            <img src="{{asset('css/Caps_Cutlery/StoreInterior2.jpg')}}" style="height:200px"/>
+            <img src="{{asset($page.'/StoreInterior1.JPG')}}" style="height:200px"/>
+            <img src="{{asset($page.'/StoreInterior2.jpg')}}" style="height:200px"/>
         </div>
         <div style="text-align:center">
             <img src="{{asset($page.'/KnifeAndFork.png')}}"/>
