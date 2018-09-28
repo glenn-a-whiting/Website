@@ -1,7 +1,7 @@
 @include ('class.queryDb')
 <?php
-$products = getProducts(null);
-$drinks = getDrinks(null);
+	$products = getProducts(null);
+	$drinks = getDrinks(null);
 ?>
 <!-- PHP things above here -->
 <!DOCTYPE html>
@@ -31,11 +31,11 @@ $drinks = getDrinks(null);
         <div class="navbarAndContent">
             <div class="navbar">
                 <ul>
-                    <li><a href="{{$page}}/index">Home</a></li>
-                    <li><a href="{{$page}}/menu">Menu</a></li>
-                    <li><a href="{{$page}}/gallery">Gallery</a></li>
-                    <li><a href="{{$page}}/contact">Contact</a></li>
-                    <li><a href="{{$page}}/about">About</a></li>
+                    <li><a href="/{{$page}}/index">Home</a></li>
+                    <li><a href="/{{$page}}/menu">Menu</a></li>
+                    <li><a href="/{{$page}}/gallery">Gallery</a></li>
+                    <li><a href="/{{$page}}/contact">Contact</a></li>
+                    <li><a href="/{{$page}}/about">About</a></li>
                 </ul>
             </div>
             <div class="contentContainer">
