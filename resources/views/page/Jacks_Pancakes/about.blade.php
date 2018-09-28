@@ -1,6 +1,7 @@
 @include ('class.queryDb')
 <?php
-$search = $_GET["postcode"];
+$search = isset($_GET["postcode"]) ? $_GET["postcode"] : null;
+$stores;
 
 if ($search >= 4400 && $search <= 5000)
 {
@@ -23,8 +24,7 @@ elseif ($search >= 2000 && $search <= 2399)
     $stores = getStores(2000);
 }
 
-else
-$stores = getStores($search);
+else $stores = getStores($search);
 ?>
 
 <!-- PHP things above here -->
