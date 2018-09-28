@@ -12,8 +12,8 @@
 			flex-wrap: nowrap;
 			align-items: center;
 			justify-content: center;
-			width: 150px;
-			height: 120px;
+			width: 250px;
+			height: 180px;
 
 			background-color: white;
 			margin: 20px;
@@ -40,8 +40,8 @@
 		}
 
 		.content img {
-			width: 150px;
-			height: 120px;
+			width: 100%;
+			height: 100%;
 
 			filter: opacity(25%);
 			border-radius: 5px;

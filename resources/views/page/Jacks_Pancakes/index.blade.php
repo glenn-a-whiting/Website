@@ -32,11 +32,11 @@
         <div class="navbarAndContent">
             <div class="navbar">
                 <ul>
-                    <li><a href="index.php">Home</a></li>
-                    <li><a href="menu.php">Menu</a></li>
-                    <li><a href="gallery.php">Gallery</a></li>
-                    <li><a href="contact.php">Contact</a></li>
-                    <li><a href="about.php">About</a></li>
+                    <li><a href="/{{$page}}/index">Home</a></li>
+                    <li><a href="/{{$page}}/menu">Menu</a></li>
+                    <li><a href="/{{$page}}/gallery">Gallery</a></li>
+                    <li><a href="/{{$page}}/contact">Contact</a></li>
+                    <li><a href="/{{$page}}/about">About</a></li>
                 </ul>
             </div>
             <div class="contentContainer">

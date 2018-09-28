@@ -1,5 +1,5 @@
+@include ('class.queryDb')
 <?php
-require_once "queryDb.php";
 $search = $_GET["postcode"];
 
 if ($search >= 4400 && $search <= 5000)
@@ -35,16 +35,16 @@ $stores = getStores($search);
             About Jack's Pancakes
         </title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" media="(min-device-width:300px)" href="astyle.css">
-        <link rel="stylesheet" media="(max-device-width:200px)" href="amobile.css">
+        <link rel="stylesheet" media="(min-device-width:300px)" href="{{asset('resources/'.$page.'/astyle.css')}}">
+        <link rel="stylesheet" media="(max-device-width:200px)" href="{{asset('resources/'.$page.'/amobile.css')}}">
     </head>
     <body>
         <div class ="banner">
             <div class="title">
                 <div class="titleSpan">
-                Jack's 
+                Jack's
                 </div>
-                <img src="pancakes.png" height="75"/>
+                <img src="{{asset('resources/'.$page.'/pancakes.png')}}" height="75"/>
                 <div class="titleSpan">
                 Pancakes
                 </div>
@@ -55,11 +55,11 @@ $stores = getStores($search);
         <div class="navbarAndContent">
             <div class="navbar">
                 <ul>
-                    <li><a href="index.php">Home</a></li>
-                    <li><a href="menu.php">Menu</a></li>
-                    <li><a href="gallery.php">Gallery</a></li>
-                    <li><a href="contact.php">Contact</a></li>
-                    <li><a href="about.php">About</a></li>
+                    <li><a href="/{{$page}}/index">Home</a></li>
+                    <li><a href="/{{$page}}/menu">Menu</a></li>
+                    <li><a href="/{{$page}}/gallery">Gallery</a></li>
+                    <li><a href="/{{$page}}/contact">Contact</a></li>
+                    <li><a href="/{{$page}}/about">About</a></li>
                 </ul>
             </div>
             <div class="contentContainer">
@@ -75,7 +75,7 @@ $stores = getStores($search);
                             giving a new group of people the opportunity to
                             taste one of our many signature recipes.
                             <br><br>
-                            
+
                             Below, you
                             can enter your postcode (if in australia)
                             and the store closest to you will be displayed.

@@ -4,12 +4,12 @@
    {
       function __construct()
       {
-            $this->open('1621ICT.db');
+            $this->open("./1621ICT.db");
       }
    }
 
    function getCustomers($searchTerm = null) {
-      
+
       $db = new MyDB();
       if(!$db){
          echo '<script type="text/javascript">alert("'.$db->lastErrorMsg().'");</script>';
@@ -34,10 +34,10 @@
          return $array;
       }
    }
-   
-   
+
+
    function getProducts($searchTerm = null) {
-      
+
       $db = new MyDB();
       if(!$db){
          echo '<script type="text/javascript">alert("'.$db->lastErrorMsg().'");</script>';
@@ -63,9 +63,9 @@
          return $array;
       }
    }
-   
+
    function getImages($searchTerm = null) {
-      
+
       $db = new MyDB();
       if(!$db){
          echo '<script type="text/javascript">alert("'.$db->lastErrorMsg().'");</script>';
@@ -91,8 +91,8 @@
          return $array;
       }
    }
-   
-   
+
+
    function getDrinks($searchTerm = null) {
       $db = new MyDB();
       if(!$db){
@@ -100,7 +100,7 @@
       } else {
          //echo "Opened database successfully\n";
       }
-      
+
         if(!$searchTerm) {
          $sql ='SELECT * from DRINKS;';
       } else {
@@ -119,7 +119,7 @@
          return $array;
       }
    }
-   
+
    function getStores($searchTerm = null) {
       $db = new MyDB();
       if(!$db){
@@ -145,12 +145,12 @@
          return $array;
       }
    }
-   
-   
-   
-   
+
+
+
+
    function addCustomer($fname, $lname, $address, $phone) {
-      
+
       $db = new MyDB();
       if(!$db){
          echo '<script type="text/javascript">alert("'.$db->lastErrorMsg().'");</script>';
@@ -161,10 +161,10 @@
       $sql ='INSERT INTO CUSTOMERS (FIRSTNAME, LASTNAME, ADDRESS, PHONE) VALUES ("'.$fname.'", "'.$lname.'", "'.$address.'", "'.$phone.'");';
       $db->query($sql);
    }
-   
-   
+
+
    function addProduct($pname, $man, $desc, $price) {
-      
+
       $db = new MyDB();
       if(!$db){
          echo '<script type="text/javascript">alert("'.$db->lastErrorMsg().'");</script>';
@@ -175,10 +175,10 @@
       $sql ='INSERT INTO PRODUCTS (PRODUCTNAME, MANUFACTURER, DESCRIPTION, PRICE) VALUES ("'.$pname.'", "'.$man.'", "'.$desc.'", "'.$price.'");';
       $db->query($sql);
    }
-   
-   
+
+
    function addEvent($ename, $loc, $desc, $date) {
-      
+
       $db = new MyDB();
       if(!$db){
          echo '<script type="text/javascript">alert("'.$db->lastErrorMsg().'");</script>';
@@ -189,6 +189,3 @@
       $sql ='INSERT INTO DRINKS (EVENTNAME, LOCATION, DESCRIPTION, DATE) VALUES ("'.$ename.'", "'.$loc.'", "'.$desc.'", "'.$date.'");';
       $db->query($sql);
    }
-   
-      
-?>

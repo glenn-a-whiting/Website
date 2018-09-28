@@ -1,5 +1,5 @@
+@include ('class.queryDb')
 <?php
-require_once("queryDb.php");
 $products = getProducts(null);
 $drinks = getDrinks(null);
 ?>
@@ -11,16 +11,16 @@ $drinks = getDrinks(null);
             Jack's Pancakes Menu
         </title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" media="(min-device-width:300px)" href="astyle.css">
-        <link rel="stylesheet" media="(max-device-width:200px)" href="amobile.css">
+        <link rel="stylesheet" media="(min-device-width:300px)" href="{{asset('resources/'.$page.'/astyle.css')}}">
+        <link rel="stylesheet" media="(max-device-width:200px)" href="{{asset('resources/'.$page.'/amobile.css')}}">
     </head>
     <body>
         <div class="banner">
             <div class="title">
                 <div class="titleSpan">
-                Jack's 
+                Jack's
                 </div>
-                <img src="pancakes.png" height="75"/> 
+                <img src="{{asset('resources/'.$page.'/pancakes.png')}}" height="75"/>
                 <div class="titleSpan">
                 Pancakes
                 </div>
@@ -31,11 +31,11 @@ $drinks = getDrinks(null);
         <div class="navbarAndContent">
             <div class="navbar">
                 <ul>
-                    <li><a href="index.php">Home</a></li>
-                    <li><a href="menu.php">Menu</a></li>
-                    <li><a href="gallery.php">Gallery</a></li>
-                    <li><a href="contact.php">Contact</a></li>
-                    <li><a href="about.php">About</a></li>
+                    <li><a href="{{$page}}/index">Home</a></li>
+                    <li><a href="{{$page}}/menu">Menu</a></li>
+                    <li><a href="{{$page}}/gallery">Gallery</a></li>
+                    <li><a href="{{$page}}/contact">Contact</a></li>
+                    <li><a href="{{$page}}/about">About</a></li>
                 </ul>
             </div>
             <div class="contentContainer">

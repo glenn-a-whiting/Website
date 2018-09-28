@@ -15,17 +15,17 @@
 		</style>
 		<script>
 			function changeSrc(event,elem){
-				elem.src = "http://localhost:8000/images/image.php?xpos="+event.offsetX+"&ypos="+event.offsetY;
+				elem.src = "{{asset('resources/'.$page.'/image.php')}}?xpos="+event.offsetX+"&ypos="+event.offsetY;
 			}
 
 			function resetSrc(){
-				document.getElementById("image").src = "http://localhost:8000/images/image.php?reset=true";
+				document.getElementById("image").src = "{{asset('resources/'.$page.'/image.php')}}?reset=true";
 			}
 		</script>
 	</head>
 	<body>
 		<div id="left">
-			<img id="image" src="{{asset('resources'.'/image.php')}}?reset=true" onclick="changeSrc(event,this)"/>
+			<img id="image" src="{{asset('resources/'.$page.'/image.php')}}?reset=true" onclick="changeSrc(event,this)"/>
 			<button onclick="resetSrc()">Reset</button>
 		</div>
 
