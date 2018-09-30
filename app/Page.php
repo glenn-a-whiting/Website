@@ -551,13 +551,13 @@ class Page extends Model
 			"interactive" => true,
 			"animated" => true
 		],
-		"fallingblocks" => [
+		/*"fallingblocks" => [
 			"description" => "",
 			"thumbnail" => "https://i.imgur.com/FPW8xit.png",
 			"data" => "http://localhost/data/p5/fallingblocks.js",
 			"interactive" => false,
 			"animated" => true
-		],
+		],*/
 		"squarecircle" => [
 			"description" => "",
 			"thumbnail" => "http://localhost/data/p5/squarecircle.png",
