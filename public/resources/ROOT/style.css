@@ -4,7 +4,25 @@
 	justify-content: center;
 }
 
+.badge {
+	position: absolute;
+	left: -10px;
+	padding: 2px 10px;
+	border: 1px black solid;
+	border-radius: 15px;
+	z-index: 3;
+}
+
+.badge-animated {
+	background-color: blue;
+}
+
+.badge-interactive {
+	background-color: orange;
+}
+
 .content {
+	position: relative;
 	display: inline-flex;
 	flex-wrap: nowrap;
 	align-items: center;

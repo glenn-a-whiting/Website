@@ -10,34 +10,31 @@ class Page extends Model
 		"Website_Layout_Designer" => [
 			"description" => "(WIP) An interactive website layout designer. First project stage uses only bootstrap classes, Second stage will be more customizable",
 			"thumbnail" => "https://i.imgur.com/or8abx8.png",
-			"data" => ""
+			"data" => "",
+			"interactive" => true,
+			"animated" => false
 		],
 		"Survival_Game" => [
 			"description" => "A simple shooting survival game. Enemies become harder to kill as you progress.",
 			"thumbnail" => "https://i.imgur.com/cGc03Jp.png",
-			"data" => ""
+			"data" => "",
+			"interactive" => true,
+			"animated" => true
 		],
 		"Jacks_Pancakes" => [
 			"description" => "End-semester Website made in university. Employs PHP content rendering, loading from a file-based database, custom vanilla css.",
 			"thumbnail" => "https://i.imgur.com/BbdMDn5.png",
-			"data" => ""
+			"data" => "",
+			"interactive" => false,
+			"animated" => false
 		],
 		"Caps_Cutlery" => [
 			"description" => "Jack Sparrow's kitchen shop",
 			"thumbnail" => "https://i.imgur.com/xJIiA1r.png",
-			"data" => ""
+			"data" => "",
+			"interactive" => false,
+			"animated" => false
 		],
-		/*"Restaurant" => [
-			"description" => "A restaurant ordering system, designed to also keep track of ingredient stocks.",
-			"thumbnail" => "",
-			"data" => ""
-		],*/
-		/*"default" => [
-			"description" => "PHP Class Showcasing",
-			"thumbnail" => "https://i.imgur.com/K8Hl5u5.png",
-			"data" => "C:/Users/Glenn/Documents/PHP/Laravel/portfolio/resources/assets/php/index.php",
-			"classSet" => ["Test"] //Classes to display
-		],*/
 		"canvas" => [
 			"description" => "A simplified class for PHP Image creation and manipulation.",
 			"thumbnail" => "https://i.imgur.com/n1A8ScA.png",
@@ -522,42 +519,58 @@ class Page extends Model
 						]
 					]
 				]
-			]
+			],
+			"interactive" => false,
+			"animated" => false
 		],
 		"canvas_simple" => [
 			"description" => "A plaintext version of the methods shown above.",
 			"thumbnail" => "https://i.imgur.com/BSJr5w9.png",
-			"data" => ""
+			"data" => "",
+			"interactive" => false,
+			"animated" => false
 		],
 		"crosshairs" => [
 			"description" => "A simple demonstration of the canvas class, and how it can be used to create interactive images.",
 			"thumbnail" => "https://i.imgur.com/nZRU26d.png",
-			"data" => ""
+			"data" => "",
+			"interactive" => true,
+			"animated" => false
 		],
 		"orbitinglines" => [
 			"description" => "Mutually gravitating points, moving in N dimensions. Points are cast orthogonally down to 2 dimensions.",
 			"thumbnail" => "https://i.imgur.com/1xMBjQC.png",
-			"data" => "http://localhost/data/p5/orbitinglines.js"
+			"data" => "http://localhost/data/p5/orbitinglines.js",
+			"interactive" => false,
+			"animated" => true
 		],
 		"gears" => [
 			"description" => "Gear class, customizable radii and teeth",
 			"thumbnail" => "https://i.imgur.com/Wp48Asp.png",
-			"data" => "http://localhost/data/p5/gears.js"
+			"data" => "http://localhost/data/p5/gears.js",
+			"interactive" => true,
+			"animated" => true
 		],
 		"fallingblocks" => [
 			"description" => "",
 			"thumbnail" => "https://i.imgur.com/FPW8xit.png",
-			"data" => "http://localhost/data/p5/fallingblocks.js"
+			"data" => "http://localhost/data/p5/fallingblocks.js",
+			"interactive" => false,
+			"animated" => true
 		],
 		"squarecircle" => [
 			"description" => "",
 			"thumbnail" => "http://localhost/data/p5/squarecircle.png",
-			"data" => "http://localhost/data/p5/squarecircle.js"
+			"data" => "http://localhost/data/p5/squarecircle.js",
+			"interactive" => true,
+			"animated" => true
 		],
 		"trails" => [
 			"description" => "Rainbow trails",
 			"thumbnail" => "https://i.imgur.com/1RNczv6.png",
-			"data" => "http://localhost/data/p5/trails.js"
+			"data" => "http://localhost/data/p5/trails.js",
+			"interactive" => true,
+			"animated" => true
 		]
 	];
 }

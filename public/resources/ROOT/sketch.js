@@ -18,7 +18,8 @@ function draw() {
 	clear();
 	ripples.forEach(r => {
 		r.r++;
-		stroke(map(r.r,0,100,0,255));
+		let a = map(r.r,0,100,255,0);
+		stroke(120,120,255,a);
 		ellipse(r.x,r.y,r.r);
 	});
 
