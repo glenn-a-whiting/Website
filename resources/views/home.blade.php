@@ -15,7 +15,7 @@
 		<div id="main" class="container">
 			@foreach ($pages as $title => $p)
 				<a href="/{{$title}}" class="container content">
-					@for($a = array('animated','interactive'), $i = 0, $top = 10; $i < count($a); $i++)
+					@for($a = array('animated','interactive','multiuser'), $i = 0, $top = 10; $i < count($a); $i++)
 						@if(isset($p[$a[$i]]) && $p[$a[$i]])
 							<div class="badge badge-{{$a[$i]}}" style="top:{{$top}}px;">
 								{{$a[$i]}}

@@ -21,6 +21,10 @@
 	background-color: orange;
 }
 
+.badge-multiuser {
+	background-color: lime;
+}
+
 .content {
 	position: relative;
 	display: inline-flex;
