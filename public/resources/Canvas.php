@@ -18,11 +18,13 @@
 		private $strokeWeight = 1;
 		private $strokeStyle;
 
-		private $fonts;
-
 		public $font = 4;
+		public $fontSize = 20;
+		public $fontAngle = 0;
+
+		private $fonts = [1,2,3,4,5];
 		private $fontDirection = "horizontal";	// string: ("vertical" | "horizontal")
-		private $fontAlign = "BOTTOM RIGHT"; // Where text is rendered relative to the coordinates.
+		private $fontAlign = "TOP LEFT"; // text origin point
 
 		public function __construct($url,$width=null,$height=null,$type=null){
 			$this->url = $url;
@@ -75,9 +77,7 @@
 			$this->setStrokeColor([0,0,0]);
 			$this->setFillColor([0,0,0]);
 
-			$this->fonts = [];
-
-			$self->instances[] = $this;
+			self::$instances[] = $this;
 		}
 
 		// Main rendering function.
@@ -294,7 +294,7 @@
 		}
 
 		// Render text at position, wrapping text onto newlines when text exceeds width in pixels.
-		public function drawWrappedText($string,$x,$y,$width,$lineHeight=null) {
+		/*public function drawWrappedText($string,$x,$y,$width,$lineHeight=null) {
 			$lineHeight = $lineHeight == null ? (imagefontheight($this->font)*1) : $lineHeight;
 			$w = $width / imagefontwidth($this->font); // width in characters
 			$lines = explode("\r\n",wordwrap($string, $w, "\r\n"));
@@ -315,56 +315,105 @@
 				$this->drawText($lines[$line],$x,$new_y);
 			}
 			return count($lines);
+		}*/
+
+		private function fontHeight($string){
+			$height;
+			if(is_integer($this->font)){
+				$height = imagefontheight($this->font);
+			}
+			else{
+				$box = imagettfbbox($this->fontSize, $this->fontAngle, $this->font, $string);
+				$min_x = min( array($box[0], $box[2], $box[4], $box[6]) );
+				$max_x = max( array($box[0], $box[2], $box[4], $box[6]) );
+				$min_y = min( array($box[1], $box[3], $box[5], $box[7]) );
+				$max_y = max( array($box[1], $box[3], $box[5], $box[7]) );
+				$width = ( $max_x - $min_x );
+				$height = ( $max_y - $min_y );
+			}
+			return $height;
+		}
+
+		private function fontWidth($string){
+			$width;
+			if(is_integer($this->font)){
+				$width = imagefontwidth($this->font) * strlen($string);
+			}
+			else{
+				$box = imagettfbbox($this->fontSize, $this->fontAngle, $this->font, $string);
+				$min_x = min( array($box[0], $box[2], $box[4], $box[6]) );
+				$max_x = max( array($box[0], $box[2], $box[4], $box[6]) );
+				$min_y = min( array($box[1], $box[3], $box[5], $box[7]) );
+				$max_y = max( array($box[1], $box[3], $box[5], $box[7]) );
+				$width = ( $max_x - $min_x );
+				$height = ( $max_y - $min_y );
+			}
+			return $width;
 		}
 
 		// Render text at position
 		public function drawText($string,$x,$y){
 			$nx;
 			$ny;
-			$sl = strlen($string);
-			switch($this->fontAlign){
-				case "TOP LEFT":
-					$nx = $x - imagefontwidth($this->font)*$sl;
-					$ny = $y - imagefontheight($this->font);
-					break;
-				case "TOP CENTER":
-					$nx = $x - imagefontwidth($this->font)*$sl/2;
-					$ny = $y - imagefontheight($this->font);
-					break;
-				case "TOP RIGHT":
-					$nx = $x;
-					$ny = $y - imagefontheight($this->font);
-					break;
-				case "CENTER LEFT":
-					$nx = $x - imagefontwidth($this->font)*$sl;
-					$ny = $y - imagefontheight($this->font)/2;
-					break;
-				case "CENTER CENTER":
-					$nx = $x - imagefontwidth($this->font)*$sl/2;
-					$ny = $y - imagefontheight($this->font)/2;
-					break;
-				case "CENTER RIGHT":
-					$nx = $x;
-					$ny = $y - imagefontheight($this->font)/2;
-					break;
-				case "BOTTOM LEFT":
-					$nx = $x - imagefontwidth($this->font)*$sl;
-					$ny = $y;
-					break;
-				case "BOTTOM CENTER":
-					$nx = $x - imagefontwidth($this->font)*$sl/2;
-					$ny = $y;
-					break;
-				case "BOTTOM RIGHT":
-					$nx = $x;
-					$ny = $y;
-					break;
-			}
-			if($this->fontDirection == "vertical"){
-				imagestringup($this->image, $this->font, $nx, $ny, $string, $this->palette[$this->strokeColor]);
-			}
-			elseif($this->fontDirection == "horizontal"){
+			$fa = explode(" ",$this->fontAlign);
+
+			if(is_integer($this->font)){
+				$sl = strlen($string);
+
+				switch($fa[0]){
+					case "TOP":
+						$ny = $y + $this->fontHeight($string);
+						break;
+					case "CENTER":
+						$ny = $y + $this->fontHeight($string)/2;
+						break;
+					case "BOTTOM":
+						$ny = $y;
+						break;
+				}
+
+				switch($fa[1]){
+					case "LEFT":
+						$nx = $x - $this->fontWidth($string);
+						break;
+					case "CENTER":
+						$nx = $x - $this->fontWidth($string)/2;
+						break;
+					case "RIGHT":
+						$nx = $x;
+						break;
+				}
+
 				imagestring($this->image, $this->font, $nx, $ny, $string, $this->palette[$this->strokeColor]);
+			}
+			else{
+				$box = imagettfbbox($this->fontSize, $this->fontAngle, $this->font, $string);
+
+				switch($fa[0]){
+					case "TOP":
+						$ny = $y + $this->fontHeight($string);
+						break;
+					case "CENTER":
+						$ny = $y + $this->fontHeight($string)/2;
+						break;
+					case "BOTTOM":
+						$ny = $y;
+						break;
+				}
+
+				switch($fa[1]){
+					case "LEFT":
+						$nx = $x;
+						break;
+					case "CENTER":
+						$nx = $x - $this->fontWidth($string)/2;
+						break;
+					case "RIGHT":
+						$nx = $x - $this->fontWidth($string);
+						break;
+				}
+
+				imagettftext($this->image, $this->fontSize, $this->fontAngle, $nx, $ny, $this->palette[$this->strokeColor], $this->font, $string);
 			}
 		}
 
@@ -413,9 +462,9 @@
 		}
 
 		// alias of drawWrappedText
-		public function wrappedText($string,$x,$y,$width,$lineHeight=null){
+		/*public function wrappedText($string,$x,$y,$width,$lineHeight=null){
 			$this->drawWrappedText($string,$x,$y,$width,$lineHeight);
-		}
+		}*/
 
 		// alias of drawText
 		public function text($string,$x,$y){
