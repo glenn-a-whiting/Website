@@ -142,13 +142,27 @@
 
 		/* Canvas settings */
 
+		private function hexToRgb($hex){
+			$r = hexdec(substr($hex,1,2));
+			$g = hexdec(substr($hex,3,2));
+			$b = hexdec(substr($hex,5,2));
+
+			return [$r,$g,$b];
+		}
+
 		// Set color of shape edges
 		public function setStrokeColor($color/*Array*/){
+			if(is_string($color) && substr($color,0,1) == "#"){
+				$color = $this->hexToRgb($color);
+			}
 			$this->strokeColor = $this->getPaletteIndex($color);
 		}
 
 		// alias of setStrokeColor
 		public function stroke($color){
+			if(is_string($color) && substr($color,0,1) == "#"){
+				$color = $this->hexToRgb($color);
+			}
 			$this->setStrokeColor($color);
 		}
 
