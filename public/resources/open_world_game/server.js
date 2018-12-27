@@ -1,7 +1,7 @@
 const wss = require("wss");
 const mysql = require("mysql");
 const md5 = require('md5');
-const host = "localhost";
+const host = "http://ec2-52-14-176-148.us-east-2.compute.amazonaws.com";
 const port = 2500;
 const options = {noServer: true, clientTracking:true, host:host, port:port};
 
@@ -27,13 +27,13 @@ var server = wss.createServer(options,function (ws){
 			}
 		});
 	});
-	
+
 	// Send a response back to the connection that sent it
 	ws.reply = function(type,obj){
 		obj.type = type;
 		ws.send(JSON.stringify(obj));
 	}
-	
+
 	ws.on('message', function incoming(message) {
 		try{ var data = JSON.parse(message);}
 		catch(err){
@@ -46,7 +46,7 @@ var server = wss.createServer(options,function (ws){
 			ws.reply("error",{"error":"(Server) Incoming data contained no type"});
 		}
 		data.source = ws.uniqueHash;
-		
+
 		switch(typeof data.filter){
 			case "number":
 				switch(data.filter){
@@ -61,22 +61,22 @@ var server = wss.createServer(options,function (ws){
 						break;
 				}
 				break;
-			
+
 			case "object":
 				filteredBroadcast(data.type, data, data.filter);
 				break;
-			
+
 			default:
 				ws.reply("error",{"error":"(Server) Recipients badly defined."});
 				break;
 		}
 	});
-	
+
 	ws.reply("initialize",{"hash":ws.uniqueHash});
-	
+
 	server.clients.push(ws);
 	broadcast("player_connect",{"hash": ws.uniqueHash},ws);
-	
+
 }).listen(port,host,function(){
 	server.clients = [];
 	var address = this.address();

@@ -1,4 +1,4 @@
-var socket = new WebSocket("ws://localhost:2500");
+var socket = new WebSocket("ws://http://ec2-52-14-176-148.us-east-2.compute.amazonaws.com:2500");
 
 const SELF = 0;
 const BROADCAST_EXCLUSIVE = 1;
@@ -80,7 +80,7 @@ socket.onmessage = function(message){
 			return;
 		}
 	}
-	
+
 	if(data.type === undefined){
 		socket.call("error",{"error":"Incoming data contained no event type."});
 	}
@@ -113,7 +113,7 @@ $(document).ready(function(){
 			$("#error_callout").css("display","none");
 		});
 	});
-	
+
 	// Close the server connection when tab or window is closed.
 	$("body").on("unload",function(){
 		socket.close();
