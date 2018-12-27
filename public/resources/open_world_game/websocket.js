@@ -1,4 +1,4 @@
-var socket = new WebSocket("ws://http://ec2-52-14-176-148.us-east-2.compute.amazonaws.com:2500");
+var socket = new WebSocket("ws://ec2-52-14-176-148.us-east-2.compute.amazonaws.com:2500");
 
 const SELF = 0;
 const BROADCAST_EXCLUSIVE = 1;
