@@ -92,7 +92,7 @@ $(document).ready(function(){
 	});
 
 	$.ajax({
-		type:"GET",
+		type: "GET",
 		url: "./resources/Open_World_Game/world.json",
 		success:function(data){
 			world = data.world;
