@@ -1,7 +1,7 @@
 const wss = require("wss");
 const mysql = require("mysql");
 const md5 = require('md5');
-const host = "http://ec2-52-14-176-148.us-east-2.compute.amazonaws.com";
+const host = "ec2-52-14-176-148.us-east-2.compute.amazonaws.com";
 const port = 2500;
 const options = {noServer: true, clientTracking:true, host:host, port:port};
 
