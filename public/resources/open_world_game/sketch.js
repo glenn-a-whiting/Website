@@ -3,21 +3,8 @@ var h = 800;
 var players = {};
 var ownHash;
 
-function preload(){
-	$.ajax({
-		type:"GET",
-		url: "./world.json",
-		success:function(data){
-			world = data.world;
-			ready = true;
-			if(ownHash !== undefined) loop();
-		}
-	});
-}
-
 function setup(){
 	createCanvas(w,h);
-	ready = false;
 	g = 25; //grid size
 	r = g * 0.25; //player radius
 	s = r * 0.5; //player speed
@@ -28,14 +15,14 @@ function setup(){
 	};
 	//world = {};
 	noLoop();
-	
+
 	border = {
 		"left": width * 0.25,
 		"right": width * 0.75,
 		"top": height * 0.25,
 		"bottom": height * 0.75
 	};
-	
+
 	brushsize = 0;
 }
 
@@ -44,7 +31,7 @@ function renderBuild(){
 	for(let x = offset.x % g; x <= width; x += g){
 		line(x,0,x,height);
 	}
-	
+
 	for(let y = offset.y % g; y <= height; y += g){
 		line(0,y,width,y);
 	}
@@ -100,7 +87,7 @@ function renderPlayers(){
 				"x": p.x + cos(p.r + TAU * 0.875) * r,
 				"y": p.y + sin(p.r + TAU * 0.875) * r
 			};
-			
+
 			triangle(t1.x,t1.y,t2.x,t2.y,t3.x,t3.y);
 		}
 	});
@@ -121,7 +108,7 @@ function renderSelf(){
 		"x": players[ownHash].x + cos(players[ownHash].r + TAU * 0.875) * r,
 		"y": players[ownHash].y + sin(players[ownHash].r + TAU * 0.875) * r
 	};
-			
+
 	triangle(t1.x,t1.y,t2.x,t2.y,t3.x,t3.y);
 }
 
@@ -147,26 +134,26 @@ function renderWorld(){
 }
 
 function renderHUD(){
-	
+
 }
 
 function draw(){
-	if(ownHash === undefined || !ready) return;
+	if(ownHash === undefined) return;
 	background(200);
-	
+
 	playerMotion();
 	renderBuild();
-	
+
 	translate(offset.x,offset.y);
-	
+
 	renderWorld();
 	renderPlayers();
-	
+
 	translate(-offset.x,-offset.y);
-	
+
 	renderSelf();
 	renderHUD();
-	
+
 	if(mouseIsPressed) drawSquares();
 	if(frameCount % (60 * 1) === 0) sendUpdate();
 }
@@ -176,16 +163,16 @@ function drawSquares(){
 		"x": floor((mouseX - offset.x) / g),
 		"y": floor((mouseY - offset.y) / g)
 	};
-	
+
 	if(
-		pos.x < floor(-offset.x / g) || 
+		pos.x < floor(-offset.x / g) ||
 		pos.x > floor((width - offset.x) / g) ||
 		pos.y < floor(-offset.y / g) ||
 		pos.y > floor((height - offset.y) / g)
 	){
 		return;
 	}
-	
+
 	if(col == "0"){
 		for(let x = -brushsize; x <= brushsize; x++){
 			for(let y = -brushsize; y <= brushsize; y++){
