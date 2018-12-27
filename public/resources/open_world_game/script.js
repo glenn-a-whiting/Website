@@ -95,7 +95,7 @@ $(document).ready(function(){
 		type: "GET",
 		url: "./resources/Open_World_Game/world.json",
 		success:function(data){
-			loadWorld(data.world);
+			world = data.world;
 		}
 	});
 });

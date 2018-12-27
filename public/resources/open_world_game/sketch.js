@@ -2,6 +2,7 @@ var w = 1200;
 var h = 800;
 var players = {};
 var ownHash;
+var world;
 
 function setup(){
 	createCanvas(w,h);
@@ -14,7 +15,6 @@ function setup(){
 		"y":150
 	};
 	world = {};
-	//noLoop();
 
 	border = {
 		"left": width * 0.25,
@@ -229,8 +229,4 @@ function sendUpdate(){
 		"y":players[ownHash].y - offset.y,
 		"r":players[ownHash].r
 	},BROADCAST_EXCLUSIVE);
-}
-
-function loadWorld(w){
-	world = w;
 }
