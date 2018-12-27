@@ -8,7 +8,7 @@
 	<script src="{{asset('resources/'.$page.'/sketch.js')}}"></script>
 	<body>
 		<div class="well text-center">
-			<h1>Glenn Whiting's Portfolio</h1>
+			<h1>My Portfolio</h1>
 			<h4>A collection of created content in several languages</h4>
 		</div>
 
