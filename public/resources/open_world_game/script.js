@@ -13,6 +13,7 @@ $(document).ready(function(){
 			}
 		};
 		socket.emit("player_data_request",{},BROADCAST_EXCLUSIVE);
+		loop();
 	});
 
 	socket.receive("player_connect",function(data){
