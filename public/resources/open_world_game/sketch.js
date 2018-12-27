@@ -158,6 +158,7 @@ function draw(){
 }
 
 function drawSquares(){
+	return;
 	let pos = {
 		"x": floor((mouseX - offset.x) / g),
 		"y": floor((mouseY - offset.y) / g)
