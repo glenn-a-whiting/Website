@@ -153,7 +153,7 @@ function draw(){
 	renderSelf();
 	renderHUD();
 
-	if(mouseIsPressed) drawSquares();
+	//if(mouseIsPressed) drawSquares();
 	if(frameCount % (60 * 1) === 0) sendUpdate();
 }
 
