@@ -8,7 +8,8 @@ use App\Page;
 class PageController extends Controller
 {
 	static private $ALIASES = [
-		"game" => "Survival_Game"
+		"game" => "Survival_Game",
+		"owg" => "open_world_game"
 	];
 
 	static private function alias($a){
