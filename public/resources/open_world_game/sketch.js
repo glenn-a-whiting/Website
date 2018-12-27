@@ -24,7 +24,7 @@ function setup(){
 	};
 
 	brushsize = 0;
-	noLoop()
+	noLoop();
 }
 
 function renderBuild(){

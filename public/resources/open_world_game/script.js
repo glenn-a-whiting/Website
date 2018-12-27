@@ -13,7 +13,6 @@ $(document).ready(function(){
 			}
 		};
 		socket.emit("player_data_request",{},BROADCAST_EXCLUSIVE);
-		loop();
 	});
 
 	socket.receive("player_connect",function(data){
@@ -97,6 +96,7 @@ $(document).ready(function(){
 		url: "./resources/Open_World_Game/world.json",
 		success:function(data){
 			world = data.world;
+			loop();
 		}
 	});
 });
