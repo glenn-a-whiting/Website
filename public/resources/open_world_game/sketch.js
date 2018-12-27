@@ -13,8 +13,8 @@ function setup(){
 		"x":-1200,
 		"y":150
 	};
-	//world = {};
-	noLoop();
+	world = {};
+	//noLoop();
 
 	border = {
 		"left": width * 0.25,
@@ -229,4 +229,8 @@ function sendUpdate(){
 		"y":players[ownHash].y - offset.y,
 		"r":players[ownHash].r
 	},BROADCAST_EXCLUSIVE);
+}
+
+function loadWorld(w){
+	world = w;
 }
