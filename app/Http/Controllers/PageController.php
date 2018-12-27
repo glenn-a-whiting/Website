@@ -9,7 +9,7 @@ class PageController extends Controller
 {
 	static private $ALIASES = [
 		"game" => "Survival_Game",
-		"owg" => "open_world_game"
+		"owg" => "Open_World_Game"
 	];
 
 	static private function alias($a){
