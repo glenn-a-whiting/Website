@@ -11,17 +11,5 @@
 		<script src="{{asset('resources/'.$page.'/script.js')}}"></script>
 	</head>
 	<body>
-		<select id="square">
-			<option value="0" selected>none</option>
-			<option value="1">white</option>
-			<option value="2">black</option>
-			<option value="3">red</option>
-			<option value="4">green</option>
-			<option value="5">blue</option>
-		</select>
-		<button id="print">Print</button>
-		<input id="brushsize" type="number" value="0"/>
-		<input id="scale_input" type="number" value="25"/>
-		<p id="p"></p>
 	</body>
 </html>

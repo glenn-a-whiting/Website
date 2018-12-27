@@ -21,6 +21,14 @@ class Page extends Model
 			"interactive" => true,
 			"animated" => true
 		],
+		"Open_World_Game" => [
+			"description" => "",
+			"thumbnail" => "",
+			"data" => "",
+			"interactive" => true,
+			"animated" => true,
+			"multiplayer" => true
+		],
 		"Jacks_Pancakes" => [
 			"description" => "End-semester Website made in university. Employs PHP content rendering, loading from a file-based database, custom vanilla css.",
 			"thumbnail" => "https://i.imgur.com/BbdMDn5.png",
