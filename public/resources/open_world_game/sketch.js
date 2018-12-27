@@ -14,7 +14,6 @@ function setup(){
 		"x":-1200,
 		"y":150
 	};
-	world = {};
 
 	border = {
 		"left": width * 0.25,
@@ -139,7 +138,7 @@ function renderHUD(){
 }
 
 function draw(){
-	if(ownHash === undefined) return;
+	if(ownHash === undefined || world === undefined) return;
 	background(200);
 
 	playerMotion();
