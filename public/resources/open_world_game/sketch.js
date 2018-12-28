@@ -6,7 +6,7 @@ var world;
 
 function setup(){
 	createCanvas(w,h);
-	g = 25; //grid size
+	g = 50; //grid size
 	r = g * 0.25; //player radius
 	s = r * 0.5; //player speed
 	col = "0";
