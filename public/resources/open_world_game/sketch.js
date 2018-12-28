@@ -206,8 +206,8 @@ function keyPressed(){
 	socket.emit("player_key",{
 		"state":"down",
 		"key":key,
-		"x":players[ownHash].x,
-		"y":players[ownHash].y,
+		"x":players[ownHash].x - offset.x,
+		"y":players[ownHash].y - offset.y,
 		"r":players[ownHash].r
 	},BROADCAST_EXCLUSIVE);
 }
