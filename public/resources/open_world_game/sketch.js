@@ -6,6 +6,16 @@ var world;
 
 function setup(){
 	createCanvas(w,h);
+	square_properties = {
+		"0":{"render":"color","image":200,"clip":true},
+		"1":{"render":"color","image":"white","clip":true},
+		"2":{"render":"color","image":"black","clip":true},
+		"3":{"render":"color","image":"red","clip":true},
+		"4":{"render":"color","image":"green","clip":true},
+		"5":{"render":"color","image":"blue","clip":true},
+		"6":{"render":"color","image":"purple","clip":false},
+		undefined:{"render":"color","image":200,"clip":true}
+	};
 	g = 50; //grid size
 	r = g * 0.25; //player radius
 	s = r * 0.5; //player speed
@@ -36,6 +46,14 @@ function renderBuild(){
 	}
 }
 
+function getSquare(){
+	let x = String(floor(((width / 2) - offset.x) / g));
+	let y = String(floor(((height / 2) - offset.y) / g));
+	if(world[x] === undefined) return "0";
+	if(world[x][y] === undefined) return "0";
+	return world[x][y];
+}
+
 function playerMotion(){
 	Object.keys(players).forEach(hash => {
 		let p = players[hash];
@@ -47,6 +65,19 @@ function playerMotion(){
 			if(p.down.s){
 				offset.x -= cos(p.r) * s;
 				offset.y -= sin(p.r) * s;
+			}
+			
+			if(!square_properties[getSquare()].clip){
+				for(let i = 0; i < 10000 && !square_properties[getSquare()].clip; i++){
+					if(p.down.s){
+						offset.x += cos(p.r) * s;
+						offset.y += sin(p.r) * s;
+					}
+					else{
+						offset.x -= cos(p.r) * s;
+						offset.y -= sin(p.r) * s;
+					}
+				}
 			}
 		}
 		else{
@@ -115,18 +146,12 @@ function renderWorld(){
 	for(let x = floor(-offset.x / g); x <= floor((width - offset.x) / g); x++){
 		for(let y = floor(-offset.y / g); y <= floor((height - offset.y) / g); y++){
 			if(world[x] !== undefined && world[x][y] !== undefined){
-				var c;
-				switch(world[x][y]){
-					case "1": c = color("white"); break;
-					case "2": c = color("black"); break;
-					case "3": c = color("red"); break;
-					case "4": c = color("green"); break;
-					case "5": c = color("blue"); break;
+				var prop = square_properties[world[x][y]];
+				if(prop.render = "color"){
+					fill(prop.image);
+					stroke(prop.image);
+					rect(x*g,y*g,g,g);
 				}
-				if(x === 0 && y === 0) c = color("purple");
-				fill(c);
-				stroke(c);
-				rect(x*g,y*g,g,g);
 			}
 		}
 	}
@@ -141,7 +166,7 @@ function draw(){
 	background(200);
 
 	playerMotion();
-	renderBuild();
+	
 
 	translate(offset.x,offset.y);
 
@@ -149,16 +174,20 @@ function draw(){
 	renderPlayers();
 
 	translate(-offset.x,-offset.y);
-
+	
+	renderBuild();
 	renderSelf();
 	renderHUD();
+	
+	if(getSquare() == "6"){
+		ellipse(width/2,height/2,20);
+	}
 
-	//if(mouseIsPressed) drawSquares();
-	//if(frameCount % (60 * 1) === 0) sendUpdate();
+	if(mouseIsPressed) drawSquares();
 }
 
 function drawSquares(){
-	return;
+	//return;
 	let pos = {
 		"x": floor((mouseX - offset.x) / g),
 		"y": floor((mouseY - offset.y) / g)
