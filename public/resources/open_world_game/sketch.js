@@ -166,7 +166,7 @@ function draw(){
 	background(200);
 
 	playerMotion();
-	
+	renderBuild();
 
 	translate(offset.x,offset.y);
 
@@ -175,19 +175,16 @@ function draw(){
 
 	translate(-offset.x,-offset.y);
 	
-	renderBuild();
+	
 	renderSelf();
 	renderHUD();
 	
-	if(getSquare() == "6"){
-		ellipse(width/2,height/2,20);
-	}
 
 	if(mouseIsPressed) drawSquares();
 }
 
 function drawSquares(){
-	//return;
+	return;
 	let pos = {
 		"x": floor((mouseX - offset.x) / g),
 		"y": floor((mouseY - offset.y) / g)
