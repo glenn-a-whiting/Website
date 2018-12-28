@@ -154,7 +154,7 @@ function draw(){
 	renderHUD();
 
 	//if(mouseIsPressed) drawSquares();
-	if(frameCount % (60 * 1) === 0) sendUpdate();
+	//if(frameCount % (60 * 1) === 0) sendUpdate();
 }
 
 function drawSquares(){
@@ -205,7 +205,10 @@ function keyPressed(){
 	players[ownHash].down[key] = true;
 	socket.emit("player_key",{
 		"state":"down",
-		"key":key
+		"key":key,
+		"x":players[ownHash].x,
+		"y":players[ownHash].y,
+		"r":players[ownHash].r
 	},BROADCAST_EXCLUSIVE);
 }
 
@@ -213,7 +216,10 @@ function keyReleased(){
 	players[ownHash].down[key] = false;
 	socket.emit("player_key",{
 		"state":"up",
-		"key":key
+		"key":key,
+		"x":players[ownHash].x - offset.x,
+		"y":players[ownHash].y - offset.y,
+		"r":players[ownHash].r
 	},BROADCAST_EXCLUSIVE);
 }
 
@@ -221,12 +227,4 @@ function changeScale(scl){
 	g = scl;
 	r = g * 0.25;
 	s = r * 0.5;
-}
-
-function sendUpdate(){
-	socket.emit("player_update",{
-		"x":players[ownHash].x - offset.x,
-		"y":players[ownHash].y - offset.y,
-		"r":players[ownHash].r
-	},BROADCAST_EXCLUSIVE);
 }

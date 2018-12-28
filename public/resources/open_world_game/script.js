@@ -50,6 +50,9 @@ $(document).ready(function(){
 
 	socket.receive("player_key",function(data){
 		players[data.source].down[data.key] = (data.state == "down");
+		players[data.source].x = data.x;
+		players[data.source].y = data.y;
+		players[data.source].r = data.r;
 	});
 
 	socket.receive("global",function(data){
@@ -58,13 +61,6 @@ $(document).ready(function(){
 			case "no_loop": noLoop(); break;
 			case "socket_close": socket.close(); break;
 		}
-	});
-
-
-	socket.receive("player_update", function(data){
-		players[data.source].x = data.x;
-		players[data.source].y = data.y;
-		players[data.source].r = data.r;
 	});
 
 	$("#square").on("change",function(){
