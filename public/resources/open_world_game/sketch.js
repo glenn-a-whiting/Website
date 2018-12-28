@@ -11,8 +11,8 @@ function setup(){
 	s = r * 0.5; //player speed
 	col = "0";
 	offset = {
-		"x":-1200,
-		"y":150
+		"x": -3000,
+		"y": 0
 	};
 
 	border = {
