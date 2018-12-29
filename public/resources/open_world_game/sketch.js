@@ -141,7 +141,7 @@ function preload(){
 		},
 		"2":{
 			"render":"image",
-			"image":loadImage("./images/path.jpg"),
+			"image":loadImage("/public/resources/Open_World_Game/images/path.jpg"),
 			"clip":true
 		},
 		"3":{
@@ -151,17 +151,17 @@ function preload(){
 		},
 		"4":{
 			"render":"image",
-			"image": loadImage("./images/grass.jpg"),
+			"image": loadImage("/public/resources/Open_World_Game/images/grass.jpg"),
 			"clip":true
 		},
 		"5":{
 			"render":"image",
-			"image":loadImage("./images/water.jpg"),
+			"image":loadImage("/public/resources/Open_World_Game/images/water.jpg"),
 			"clip":true
 		},
 		"6":{
 			"render":"image",
-			"image":loadImage("./images/brick.png"),
+			"image":loadImage("/public/resources/Open_World_Game/images/brick.png"),
 			"clip":false
 		},
 		undefined:{
