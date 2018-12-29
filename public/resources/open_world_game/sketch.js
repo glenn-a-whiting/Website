@@ -354,7 +354,6 @@ function draw(){
 	translate(-offset.x,-offset.y);
 
 	//renderBuild();
-	renderSelf();
 	renderHUD();
 	renderOverlays()
 
