@@ -1,28 +1,69 @@
-var w = 1200;
-var h = 800;
+var w = 600;
+var h = 400;
+var start = {
+	"x":55,
+	"y":0
+};
 var players = {};
 var ownHash;
 var world;
 
+function preload(){
+	square_properties = {
+		"0":{
+			"render":"color",
+			"image":200,
+			"clip":true
+		},
+		"1":{
+			"render":"color",
+			"image":"white",
+			"clip":true
+		},
+		"2":{
+			"render":"image",
+			"image":loadImage("./images/path.jpg"),
+			"clip":true
+		},
+		"3":{
+			"render":"color",
+			"image":"red",
+			"clip":true
+		},
+		"4":{
+			"render":"image",
+			"image": loadImage("./images/grass.jpg"),
+			"clip":true
+		},
+		"5":{
+			"render":"image",
+			"image":loadImage("./images/water.jpg"),
+			"clip":true
+		},
+		"6":{
+			"render":"image",
+			"image":loadImage("./images/brick.png"),
+			"clip":false
+		},
+		undefined:{
+			"render":"color",
+			"image":200,
+			"clip":true
+		}
+	};
+}
+
 function setup(){
 	createCanvas(w,h);
-	square_properties = {
-		"0":{"render":"color","image":200,"clip":true},
-		"1":{"render":"color","image":"white","clip":true},
-		"2":{"render":"color","image":"black","clip":true},
-		"3":{"render":"color","image":"red","clip":true},
-		"4":{"render":"color","image":"green","clip":true},
-		"5":{"render":"color","image":"blue","clip":true},
-		"6":{"render":"color","image":"purple","clip":false},
-		undefined:{"render":"color","image":200,"clip":true}
-	};
-	g = 50; //grid size
+	
+	
+	g = 64; //grid size
 	r = g * 0.25; //player radius
 	s = r * 0.5; //player speed
 	col = "0";
 	offset = {
-		"x": -3000,
-		"y": 0
+		"x": (w / 2) - (start.x * g),
+		"y": (h / 2) - (start.y * g)
 	};
 
 	border = {
@@ -46,12 +87,21 @@ function renderBuild(){
 	}
 }
 
-function getSquare(){
-	let x = String(floor(((width / 2) - offset.x) / g));
-	let y = String(floor(((height / 2) - offset.y) / g));
-	if(world[x] === undefined) return "0";
-	if(world[x][y] === undefined) return "0";
-	return world[x][y];
+function getSquare(p = undefined){
+	if(p === undefined){
+		let x = String(floor(((width / 2) - offset.x) / g));
+		let y = String(floor(((height / 2) - offset.y) / g));
+		if(world[x] === undefined) return "0";
+		if(world[x][y] === undefined) return "0";
+		return world[x][y];
+	}
+	else{
+		let x = String(floor(p.x / g));
+		let y = String(floor(p.y / g));
+		if(world[x] === undefined) return "0";
+		if(world[x][y] === undefined) return "0";
+		return world[x][y];
+	}
 }
 
 function playerMotion(){
@@ -88,6 +138,19 @@ function playerMotion(){
 			if(p.down.s){
 				p.x += cos(p.r) * s;
 				p.y += sin(p.r) * s;
+			}
+			
+			if(!square_properties[getSquare(p)].clip){
+				for(let i = 0; i < 10000 && !square_properties[getSquare(p)].clip; i++){
+					if(p.down.s){
+						p.x -= cos(p.r) * s;
+						p.y -= sin(p.r) * s;
+					}
+					else{
+						p.x += cos(p.r) * s;
+						p.y += sin(p.r) * s;
+					}
+				}
 			}
 		}
 		if(p.down.a){
@@ -147,10 +210,15 @@ function renderWorld(){
 		for(let y = floor(-offset.y / g); y <= floor((height - offset.y) / g); y++){
 			if(world[x] !== undefined && world[x][y] !== undefined){
 				var prop = square_properties[world[x][y]];
-				if(prop.render = "color"){
-					fill(prop.image);
-					stroke(prop.image);
-					rect(x*g,y*g,g,g);
+				switch(prop.render){
+					case "color":
+						fill(prop.image);
+						stroke(prop.image);
+						rect(x*g,y*g,g,g);
+						break;
+					case "image":
+						image(prop.image,x*g,y*g,g,g);
+						break;
 				}
 			}
 		}
@@ -166,7 +234,7 @@ function draw(){
 	background(200);
 
 	playerMotion();
-	renderBuild();
+	
 
 	translate(offset.x,offset.y);
 
@@ -175,16 +243,19 @@ function draw(){
 
 	translate(-offset.x,-offset.y);
 	
-	
+	//renderBuild();
 	renderSelf();
 	renderHUD();
 	
+	if(getSquare() == "6"){
+		ellipse(width/2,height/2,20);
+	}
 
 	if(mouseIsPressed) drawSquares();
 }
 
 function drawSquares(){
-	return;
+	//return;
 	let pos = {
 		"x": floor((mouseX - offset.x) / g),
 		"y": floor((mouseY - offset.y) / g)

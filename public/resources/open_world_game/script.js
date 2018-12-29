@@ -17,8 +17,8 @@ $(document).ready(function(){
 
 	socket.receive("player_connect",function(data){
 		players[data.hash] = {
-			"x":w/2,
-			"y":h/2,
+			"x":(w / 2) + (start.x * g),
+			"y":(h / 2) + (start.y * g),
 			"r":0,
 			"down":{
 				"w":false,
@@ -39,12 +39,24 @@ $(document).ready(function(){
 
 	socket.receive("player_data_request",function(data){
 		socket.emit("player_data_response",{
-			"player":players[ownHash]
+			"x":players[ownHash].x - offset.x,
+			"y":players[ownHash].y - offset.y,
+			"r":players[ownHash].r
 		},{"uniqueHash":data.source});
 	});
 
 	socket.receive("player_data_response",function(data){
-		players[data.source] = data.player;
+		players[data.source] = {
+			"x":data.x,
+			"y":data.y,
+			"r":data.r,
+			"down":{
+				"w":false,
+				"s":false,
+				"a":false,
+				"d":false
+			}
+		}
 		players = sortObject(players);
 	});
 
