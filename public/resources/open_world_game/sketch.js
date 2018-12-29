@@ -1,5 +1,5 @@
 var w = window.innerWidth - 10;
-var h = window.innerHeight - 10;
+var h = window.innerHeight - 20;
 var start = {
 	"x":55,
 	"y":0
@@ -9,7 +9,7 @@ var ownHash;
 var world;
 
 function windowResized(){
-	resizeCanvas(window.innerWidth - 10, window.innerHeight - 10);
+	resizeCanvas(window.innerWidth - 10, window.innerHeight - 20);
 }
 
 function preload(){
