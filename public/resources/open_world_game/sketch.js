@@ -22,7 +22,7 @@ function preload(){
 		},
 		"2":{
 			"render":"image",
-			"image":loadImage("./images/path.jpg"),
+			"image":loadImage("{{asset('resources/'.$page.'./images/path.jpg')}}"),
 			"clip":true
 		},
 		"3":{
@@ -32,17 +32,17 @@ function preload(){
 		},
 		"4":{
 			"render":"image",
-			"image": loadImage("./images/grass.jpg"),
+			"image": loadImage("{{asset('resources/'.$page.'./images/grass.jpg')}}"),
 			"clip":true
 		},
 		"5":{
 			"render":"image",
-			"image":loadImage("./images/water.jpg"),
+			"image":loadImage("{{asset('resources/'.$page.'./images/water.jpg')}}"),
 			"clip":true
 		},
 		"6":{
 			"render":"image",
-			"image":loadImage("./images/brick.png"),
+			"image":loadImage("{{asset('resources/'.$page.'./images/brick.png')}}"),
 			"clip":false
 		},
 		undefined:{
@@ -55,8 +55,8 @@ function preload(){
 
 function setup(){
 	createCanvas(w,h);
-	
-	
+
+
 	g = 64; //grid size
 	r = g * 0.25; //player radius
 	s = r * 0.5; //player speed
@@ -116,7 +116,7 @@ function playerMotion(){
 				offset.x -= cos(p.r) * s;
 				offset.y -= sin(p.r) * s;
 			}
-			
+
 			if(!square_properties[getSquare()].clip){
 				for(let i = 0; i < 10000 && !square_properties[getSquare()].clip; i++){
 					if(p.down.s){
@@ -139,7 +139,7 @@ function playerMotion(){
 				p.x += cos(p.r) * s;
 				p.y += sin(p.r) * s;
 			}
-			
+
 			if(!square_properties[getSquare(p)].clip){
 				for(let i = 0; i < 10000 && !square_properties[getSquare(p)].clip; i++){
 					if(p.down.s){
@@ -234,7 +234,7 @@ function draw(){
 	background(200);
 
 	playerMotion();
-	
+
 
 	translate(offset.x,offset.y);
 
@@ -242,11 +242,11 @@ function draw(){
 	renderPlayers();
 
 	translate(-offset.x,-offset.y);
-	
+
 	//renderBuild();
 	renderSelf();
 	renderHUD();
-	
+
 	if(getSquare() == "6"){
 		ellipse(width/2,height/2,20);
 	}
