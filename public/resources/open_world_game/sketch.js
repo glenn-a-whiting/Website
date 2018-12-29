@@ -252,8 +252,12 @@ function playerMotion(){
 
 function renderPlayers(){
 	Object.keys(players).forEach(hash => {
-		players[hash].draw();
+		if(hash !== ownHash) players[hash].draw();
 	});
+}
+
+function renderSelf(){
+	players[ownHash].draw();
 }
 
 function renderWorld(){
@@ -354,6 +358,7 @@ function draw(){
 	translate(-offset.x,-offset.y);
 
 	//renderBuild();
+	renderSelf();
 	renderHUD();
 	renderOverlays()
 
