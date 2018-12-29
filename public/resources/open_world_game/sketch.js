@@ -459,17 +459,7 @@ function keyReleased(){
 
 function mouseMoved(){}
 
-function mouseDragged(){
-	let x = touches[0].x;
-	let y = touches[0].y;
-	let radius = abs(dist(w/2,h/2,x,y)*2);
-	players[ownHash].r = atan2((h/2) - y, (w/2) - x);
-
-	Object.keys(overlay.touch).forEach(region => {
-		overlay.touch[region].active = (radius >= region.r1) && (radius < region.r2);
-	});
-	return false;
-}
+function mouseDragged(){}
 
 function touchStarted(e){
 	showTouchGuides = true;
