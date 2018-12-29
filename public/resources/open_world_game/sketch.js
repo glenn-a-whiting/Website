@@ -22,7 +22,7 @@ function preload(){
 		},
 		"2":{
 			"render":"image",
-			"image":loadImage("{{asset('resources/'.$page.'./images/path.jpg')}}"),
+			"image":loadImage("/resources/Open_World_Game/images/path.jpg"),
 			"clip":true
 		},
 		"3":{
@@ -32,17 +32,17 @@ function preload(){
 		},
 		"4":{
 			"render":"image",
-			"image": loadImage("{{asset('resources/'.$page.'./images/grass.jpg')}}"),
+			"image": loadImage("/resources/Open_World_Game/images/grass.jpg"),
 			"clip":true
 		},
 		"5":{
 			"render":"image",
-			"image":loadImage("{{asset('resources/'.$page.'./images/water.jpg')}}"),
+			"image":loadImage("/resources/Open_World_Game/images/water.jpg"),
 			"clip":true
 		},
 		"6":{
 			"render":"image",
-			"image":loadImage("{{asset('resources/'.$page.'./images/brick.png')}}"),
+			"image":loadImage("/resources/Open_World_Game/images/brick.png"),
 			"clip":false
 		},
 		undefined:{
