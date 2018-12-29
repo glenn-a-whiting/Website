@@ -7,10 +7,13 @@ var start = {
 var players = {};
 var ownHash;
 var world;
-var offset;
 var g = 64; //grid size
 var r = g * 0.25; //player radius
 var s = r * 0.5; //player speed
+var offset = {
+	"x": (w / 2) - (start.x * g),
+	"y": (h / 2) - (start.y * g)
+};
 
 class Player {
 	constructor(hash,x,y,r){
