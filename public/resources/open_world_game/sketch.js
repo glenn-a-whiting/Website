@@ -7,6 +7,10 @@ var start = {
 var players = {};
 var ownHash;
 var world;
+var offset;
+var g = 64; //grid size
+var r = g * 0.25; //player radius
+var s = r * 0.5; //player speed
 
 class Player {
 	constructor(hash,x,y,r){
@@ -19,6 +23,10 @@ class Player {
 			"s":false,
 			"a":false,
 			"d":false
+		};
+		this.chat = {
+			"content":"",
+			"time":0
 		};
 	}
 
@@ -40,28 +48,38 @@ class Player {
 		};
 
 		triangle(t1.x,t1.y,t2.x,t2.y,t3.x,t3.y);
+
+		/*if(this.chat !== ""){
+			textAlign(TOP,LEFT);
+			rect(this.x - 50, this.y - 120, 100, 100);
+			text(this.chat.content, this.x - 50, this.y - 120);
+		}
+
+		this.chat.time--;
+		if(this.chat.time === 0) this.chat.content = "";
+		*/
 	}
 
-	move(){
+	move(touch=false,speed=1){
 		if(this.hash === ownHash){
-			if(this.down.w){
-				offset.x += cos(this.r) * s;
-				offset.y += sin(this.r) * s;
+			if(this.down.w || touch){
+				offset.x += cos(this.r) * s * speed;
+				offset.y += sin(this.r) * s * speed;
 			}
 			if(this.down.s){
-				offset.x -= cos(this.r) * s;
-				offset.y -= sin(this.r) * s;
+				offset.x -= cos(this.r) * s * speed;
+				offset.y -= sin(this.r) * s * speed;
 			}
 
 			if(!square_properties[getSquare()].clip){
 				for(let i = 0; i < 10000 && !square_properties[getSquare()].clip; i++){
 					if(this.down.s){
-						offset.x += cos(this.r) * s;
-						offset.y += sin(this.r) * s;
+						offset.x += cos(this.r) * s * speed;
+						offset.y += sin(this.r) * s * speed;
 					}
 					else{
-						offset.x -= cos(this.r) * s;
-						offset.y -= sin(this.r) * s;
+						offset.x -= cos(this.r) * s * speed;
+						offset.y -= sin(this.r) * s * speed;
 					}
 				}
 			}
@@ -96,6 +114,10 @@ class Player {
 			this.r += 0.05;
 		}
 	}
+
+	addChat(text){
+		this.chat = {"content":text,"time":600};
+	}
 }
 
 function windowResized(){
@@ -116,7 +138,7 @@ function preload(){
 		},
 		"2":{
 			"render":"image",
-			"image":loadImage("/resources/Open_World_Game/images/path.jpg"),
+			"image":loadImage("./images/path.jpg"),
 			"clip":true
 		},
 		"3":{
@@ -126,17 +148,17 @@ function preload(){
 		},
 		"4":{
 			"render":"image",
-			"image": loadImage("/resources/Open_World_Game/images/grass.jpg"),
+			"image": loadImage("./images/grass.jpg"),
 			"clip":true
 		},
 		"5":{
 			"render":"image",
-			"image":loadImage("/resources/Open_World_Game/images/water.jpg"),
+			"image":loadImage("./images/water.jpg"),
 			"clip":true
 		},
 		"6":{
 			"render":"image",
-			"image":loadImage("/resources/Open_World_Game/images/brick.png"),
+			"image":loadImage("./images/brick.png"),
 			"clip":false
 		},
 		undefined:{
@@ -149,16 +171,9 @@ function preload(){
 
 function setup(){
 	createCanvas(w,h);
-
-
-	g = 64; //grid size
-	r = g * 0.25; //player radius
-	s = r * 0.5; //player speed
+	showTouchGuides = false;
 	col = "0";
-	offset = {
-		"x": (w / 2) - (start.x * g),
-		"y": (h / 2) - (start.y * g)
-	};
+
 
 	border = {
 		"left": width * 0.25,
@@ -167,6 +182,34 @@ function setup(){
 		"bottom": height * 0.75
 	};
 
+	dialog = {
+		"chat":{
+			"active":false,
+			"content":""
+		}
+	};
+
+	overlay = {
+		"touch":{
+			"center":{
+				"active":false,
+				"r1":0,
+				"r2": w > h ? h * 0.4 : w * 0.4
+			},
+			"inner":{
+				"active":false,
+				"r1":w > h ? h * 0.4 : w * 0.4,
+				"r2":w > h ? h * 0.7 : w * 0.7
+			},
+			"outer":{
+				"active":false,
+				"r1":w > h ? h * 0.7 : w * 0.7,
+				"r2":w > h ? h * 1 : w * 1
+			}
+		}
+	};
+
+	textSize(20);
 	brushsize = 0;
 }
 
@@ -235,7 +278,66 @@ function renderWorld(){
 }
 
 function renderHUD(){
+	/*if(dialog.chat.active){
+		let box = {
+			"x":10, "y":10, "w": w - 40, "h": 30
+		};
+		fill("white");
+		stroke("black");
+		rect(box.x,height-(box.y+box.h),box.w,box.h);
 
+		fill("black");
+		textAlign(LEFT,CENTER);
+
+		text(dialog.chat.content,box.x+5,height - (box.y+(box.h/2)));
+	}
+	else{
+		textAlign(RIGHT,BOTTOM);
+		fill("white");
+		stroke("black");
+		text("(T)alk",w - 30,h - 20);
+	}*/
+}
+
+function renderOverlays(){
+	Object.keys(overlay.touch).forEach(region => {
+		if(overlay.touch[region].active){
+			stroke(0,0,255,25);
+			thickness = (overlay.touch[region].r2 - overlay.touch[region].r1) / 2;
+			strokeWeight(thickness);
+			noFill();
+			ellipse(w/2, h/2, overlay.touch[region].r1 + (overlay.touch[region].r2 - overlay.touch[region].r1) / 2);
+			strokeWeight(1);
+
+			switch(region){
+				case "center":
+					players[ownHash].move(true,0);
+					break;
+				case "inner":
+					players[ownHash].move(true,0.5);
+					break;
+				case "outer":
+					players[ownHash].move(true,1);
+					break;
+			}
+		}
+		strokeWeight(2);
+		if(showTouchGuides){
+			noFill();
+			stroke(0,0,0);
+			for(let i = 0; i < 4; i++){
+				arc(
+					w/2,
+					h/2,
+					overlay.touch[region].r2,
+					overlay.touch[region].r2,
+					(TAU/4*i) - 0.05,
+					(TAU/4*i) + 0.05
+				);
+			}
+		}
+		strokeWeight(1);
+	});
 }
 
 function draw(){
@@ -255,10 +357,11 @@ function draw(){
 	//renderBuild();
 	renderSelf();
 	renderHUD();
+	renderOverlays()
 
-	// if(getSquare() == "6"){
-	// 	ellipse(width/2,height/2,20);
-	// }
+	//if(getSquare() == "6"){
+	//	ellipse(width/2,height/2,20);
+	//}
 
 	//if(mouseIsPressed) drawSquares();
 }
@@ -308,6 +411,30 @@ function mousePressed(){
 }
 
 function keyPressed(){
+	/*if(dialog.chat.active){
+		switch(keyCode){
+			case ESCAPE:
+				dialog.chat.active = false;
+				break;
+
+			case BACKSPACE:
+				dialog.chat.content = dialog.chat.content.substr(0,dialog.chat.content.length-1);
+				break;
+
+			case ENTER:
+				socket.emit("chat",{"content":dialog.chat.content},BROADCAST_INCLUSIVE);
+				dialog.chat.active = false;
+				break;
+
+			default:
+				dialog.chat.content += key;
+				break;
+		}
+
+		return;
+	}
+	if(key === "t") dialog.chat.active = true;
+	*/
 	players[ownHash].down[key] = true;
 	socket.emit("player_key",{
 		"state":"down",
@@ -327,6 +454,53 @@ function keyReleased(){
 		"y":players[ownHash].y - offset.y,
 		"r":players[ownHash].r
 	},BROADCAST_EXCLUSIVE);
+}
+
+
+function mouseMoved(){}
+
+function mouseDragged(){
+	let x = touches[0].x;
+	let y = touches[0].y;
+	let radius = abs(dist(w/2,h/2,x,y)*2);
+	players[ownHash].r = atan2((h/2) - y, (w/2) - x);
+
+	Object.keys(overlay.touch).forEach(region => {
+		overlay.touch[region].active = (radius >= region.r1) && (radius < region.r2);
+	});
+	return false;
+}
+
+function touchStarted(e){
+	showTouchGuides = true;
+	let x = touches[0].x;
+	let y = touches[0].y;
+	let radius = abs(dist(w/2,h/2,x,y)*2);
+	players[ownHash].r = atan2((h/2) - y, (w/2) - x);
+
+	Object.keys(overlay.touch).forEach(region => {
+		overlay.touch[region].active = (radius >= overlay.touch[region].r1) && (radius < overlay.touch[region].r2);
+	});
+	return false;
+}
+
+function touchMoved(){
+	let x = touches[0].x;
+	let y = touches[0].y;
+	let radius = abs(dist(w/2,h/2,x,y)*2);
+	players[ownHash].r = atan2((h/2) - y, (w/2) - x);
+
+	Object.keys(overlay.touch).forEach(region => {
+		overlay.touch[region].active = (radius >= overlay.touch[region].r1) && (radius < overlay.touch[region].r2);
+	});
+	return false;
+}
+
+function touchEnded(e){
+	Object.keys(overlay.touch).forEach(region => {
+		overlay.touch[region].active = false;
+	});
+	return false;
 }
 
 function changeScale(scl){
