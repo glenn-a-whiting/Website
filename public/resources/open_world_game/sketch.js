@@ -8,6 +8,96 @@ var players = {};
 var ownHash;
 var world;
 
+class Player {
+	constructor(hash,x,y,r){
+		this.hash = hash;
+		this.x = x;
+		this.y = y;
+		this.r = r;
+		this.down = {
+			"w":false,
+			"s":false,
+			"a":false,
+			"d":false
+		};
+	}
+
+	draw(){
+		if(this.hash !== ownHash) fill("white");
+		else fill("lightblue");
+		stroke("black");
+		let t1 = {
+			"x": this.x + cos(this.r + TAU * 0.5) * r,
+			"y": this.y + sin(this.r + TAU * 0.5) * r
+		};
+		let t2 = {
+			"x": this.x + cos(this.r + TAU * 0.125) * r,
+			"y": this.y + sin(this.r + TAU * 0.125) * r
+		};
+		let t3 = {
+			"x": this.x + cos(this.r + TAU * 0.875) * r,
+			"y": this.y + sin(this.r + TAU * 0.875) * r
+		};
+
+		triangle(t1.x,t1.y,t2.x,t2.y,t3.x,t3.y);
+	}
+
+	move(){
+		if(this.hash === ownHash){
+			if(this.down.w){
+				offset.x += cos(this.r) * s;
+				offset.y += sin(this.r) * s;
+			}
+			if(this.down.s){
+				offset.x -= cos(this.r) * s;
+				offset.y -= sin(this.r) * s;
+			}
+
+			if(!square_properties[getSquare()].clip){
+				for(let i = 0; i < 10000 && !square_properties[getSquare()].clip; i++){
+					if(this.down.s){
+						offset.x += cos(this.r) * s;
+						offset.y += sin(this.r) * s;
+					}
+					else{
+						offset.x -= cos(this.r) * s;
+						offset.y -= sin(this.r) * s;
+					}
+				}
+			}
+		}
+		else{
+			if(this.down.w){
+				this.x -= cos(this.r) * s;
+				this.y -= sin(this.r) * s;
+			}
+			if(this.down.s){
+				this.x += cos(this.r) * s;
+				this.y += sin(this.r) * s;
+			}
+
+			if(!square_properties[getSquare(this)].clip){
+				for(let i = 0; i < 10000 && !square_properties[getSquare(this)].clip; i++){
+					if(this.down.s){
+						this.x -= cos(this.r) * s;
+						this.y -= sin(this.r) * s;
+					}
+					else{
+						this.x += cos(this.r) * s;
+						this.y += sin(this.r) * s;
+					}
+				}
+			}
+		}
+		if(this.down.a){
+			this.r -= 0.05;
+		}
+		if(this.down.d){
+			this.r += 0.05;
+		}
+	}
+}
+
 function windowResized(){
 	resizeCanvas(window.innerWidth - 10, window.innerHeight - 20);
 }
@@ -110,103 +200,18 @@ function getSquare(p = undefined){
 
 function playerMotion(){
 	Object.keys(players).forEach(hash => {
-		let p = players[hash];
-		if(hash === ownHash){
-			if(p.down.w){
-				offset.x += cos(p.r) * s;
-				offset.y += sin(p.r) * s;
-			}
-			if(p.down.s){
-				offset.x -= cos(p.r) * s;
-				offset.y -= sin(p.r) * s;
-			}
-
-			if(!square_properties[getSquare()].clip){
-				for(let i = 0; i < 10000 && !square_properties[getSquare()].clip; i++){
-					if(p.down.s){
-						offset.x += cos(p.r) * s;
-						offset.y += sin(p.r) * s;
-					}
-					else{
-						offset.x -= cos(p.r) * s;
-						offset.y -= sin(p.r) * s;
-					}
-				}
-			}
-		}
-		else{
-			if(p.down.w){
-				p.x -= cos(p.r) * s;
-				p.y -= sin(p.r) * s;
-			}
-			if(p.down.s){
-				p.x += cos(p.r) * s;
-				p.y += sin(p.r) * s;
-			}
-
-			if(!square_properties[getSquare(p)].clip){
-				for(let i = 0; i < 10000 && !square_properties[getSquare(p)].clip; i++){
-					if(p.down.s){
-						p.x -= cos(p.r) * s;
-						p.y -= sin(p.r) * s;
-					}
-					else{
-						p.x += cos(p.r) * s;
-						p.y += sin(p.r) * s;
-					}
-				}
-			}
-		}
-		if(p.down.a){
-			p.r -= 0.05;
-		}
-		if(p.down.d){
-			p.r += 0.05;
-		}
+		players[hash].move();
 	});
 }
 
 function renderPlayers(){
-	fill("white");
-	stroke("black");
 	Object.keys(players).forEach(hash => {
-		let p = players[hash];
-		if(hash !== ownHash){
-			let t1 = {
-				"x": p.x + cos(p.r + TAU * 0.5) * r,
-				"y": p.y + sin(p.r + TAU * 0.5) * r
-			};
-			let t2 = {
-				"x": p.x + cos(p.r + TAU * 0.125) * r,
-				"y": p.y + sin(p.r + TAU * 0.125) * r
-			};
-			let t3 = {
-				"x": p.x + cos(p.r + TAU * 0.875) * r,
-				"y": p.y + sin(p.r + TAU * 0.875) * r
-			};
-
-			triangle(t1.x,t1.y,t2.x,t2.y,t3.x,t3.y);
-		}
+		players[hash].draw();
 	});
 }
 
 function renderSelf(){
-	fill("lightblue");
-	stroke("black");
-	let t1 = {
-		"x": players[ownHash].x + cos(players[ownHash].r + TAU * 0.5) * r,
-		"y": players[ownHash].y + sin(players[ownHash].r + TAU * 0.5) * r
-	};
-	let t2 = {
-		"x": players[ownHash].x + cos(players[ownHash].r + TAU * 0.125) * r,
-		"y": players[ownHash].y + sin(players[ownHash].r + TAU * 0.125) * r
-	};
-	let t3 = {
-		"x": players[ownHash].x + cos(players[ownHash].r + TAU * 0.875) * r,
-		"y": players[ownHash].y + sin(players[ownHash].r + TAU * 0.875) * r
-	};
-
-	triangle(t1.x,t1.y,t2.x,t2.y,t3.x,t3.y);
+	players[ownHash].draw();
 }
 
 function renderWorld(){
