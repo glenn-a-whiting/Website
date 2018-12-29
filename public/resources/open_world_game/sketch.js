@@ -256,10 +256,6 @@ function renderPlayers(){
 	});
 }
 
-function renderSelf(){
-	players[ownHash].draw();
-}
-
 function renderWorld(){
 	for(let x = floor(-offset.x / g); x <= floor((width - offset.x) / g); x++){
 		for(let y = floor(-offset.y / g); y <= floor((height - offset.y) / g); y++){
