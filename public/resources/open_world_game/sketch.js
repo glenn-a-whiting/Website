@@ -247,11 +247,11 @@ function draw(){
 	renderSelf();
 	renderHUD();
 
-	if(getSquare() == "6"){
-		ellipse(width/2,height/2,20);
-	}
+	// if(getSquare() == "6"){
+	// 	ellipse(width/2,height/2,20);
+	// }
 
-	if(mouseIsPressed) drawSquares();
+	//if(mouseIsPressed) drawSquares();
 }
 
 function drawSquares(){
