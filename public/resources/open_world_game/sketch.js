@@ -1,5 +1,5 @@
-var w = 600;
-var h = 400;
+var w = window.innerWidth - 10;
+var h = window.innerHeight - 10;
 var start = {
 	"x":55,
 	"y":0
@@ -7,6 +7,10 @@ var start = {
 var players = {};
 var ownHash;
 var world;
+
+function windowResized(){
+	resizeCanvas(window.innerWidth - 10, window.innerHeight - 10);
+}
 
 function preload(){
 	square_properties = {
