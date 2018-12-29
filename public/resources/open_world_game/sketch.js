@@ -299,7 +299,7 @@ function drawSquares(){
 }
 
 function mousePressed(){
-	drawSquares();
+	//drawSquares();
 }
 
 function keyPressed(){
