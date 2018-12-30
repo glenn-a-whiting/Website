@@ -29,7 +29,11 @@ class Player {
 			"w":false,
 			"s":false,
 			"a":false,
-			"d":false
+			"d":false,
+			"ArrowUp":false,
+			"ArrowLeft":false,
+			"ArrowRight":false,
+			"ArrowDown":false
 		};
 		this.touch = {
 			"center":false,
@@ -81,10 +85,10 @@ class Player {
 	}
 
 	move(touch=false,speed=1){
-		if(this.down.a){
+		if(this.down.a || this.down.ArrowLeft){
 			this.r -= 0.05;
 		}
-		if(this.down.d){
+		if(this.down.d || this.down.ArrowRight){
 			this.r += 0.05;
 		}
 		if(this.hash === ownHash){
@@ -95,11 +99,11 @@ class Player {
 				"r":this.r
 			};
 
-			if(this.down.w || touch){
+			if(this.down.w || this.down.ArrowUp || touch){
 				offset.x += cos(this.r) * s * speed;
 				offset.y += sin(this.r) * s * speed;
 			}
-			if(this.down.s){
+			if(this.down.s || this.down.ArrowDown){
 				offset.x -= cos(this.r) * s * speed;
 				offset.y -= sin(this.r) * s * speed;
 			}
@@ -116,7 +120,7 @@ class Player {
 
 			if(!square_properties[square].clip){
 				for(let i = 0; i < 10000 && !square_properties[getSquare()].clip; i++){
-					if(this.down.s){
+					if(this.down.s || this.down.ArrowDown){
 						offset.x += cos(this.r) * s * speed;
 						offset.y += sin(this.r) * s * speed;
 					}
@@ -172,11 +176,11 @@ class Player {
 				"r":this.r
 			};
 
-			if(this.down.w){
+			if(this.down.w || this.down.ArrowUp){
 				this.x -= cos(this.r) * s;
 				this.y -= sin(this.r) * s;
 			}
-			if(this.down.s){
+			if(this.down.s || this.down.ArrowDown){
 				this.x += cos(this.r) * s;
 				this.y += sin(this.r) * s;
 			}
@@ -192,7 +196,7 @@ class Player {
 
 			if(!square_properties[square].clip){
 				for(let i = 0; i < 10000 && !square_properties[getSquare(this)].clip; i++){
-					if(this.down.s){
+					if(this.down.s || this.down.ArrowDown){
 						this.x -= cos(this.r) * s;
 						this.y -= sin(this.r) * s;
 					}
