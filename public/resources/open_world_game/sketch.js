@@ -12,15 +12,18 @@ var r = g * 0.25; //player radius
 var s = r * 0.5; //player speed
 var offset = {
 	"x": (w / 2) - (start.x * g),
-	"y": (h / 2) - (start.y * g)
+	"y": (h / 2) - (start.y * g),
+	"z": 0
 };
 var resourceLocation = "/resources/Open_World_Game/";
+
 
 class Player {
 	constructor(hash,x,y,r){
 		this.hash = hash;
 		this.x = x;
 		this.y = y;
+		this.z = "0";
 		this.r = r;
 		this.down = {
 			"w":false,
@@ -28,10 +31,23 @@ class Player {
 			"a":false,
 			"d":false
 		};
+		this.touch = {
+			"center":false,
+			"inner":false,
+			"outer":false,
+			"x":w/2,
+			"y":h/2
+		};
 		this.chat = {
 			"content":"",
 			"time":0
 		};
+		this.delta = {
+			"x":0,
+			"y":0,
+			"z":0,
+			"r":0
+		}
 	}
 
 	draw(){
@@ -65,7 +81,20 @@ class Player {
 	}
 
 	move(touch=false,speed=1){
+		if(this.down.a){
+			this.r -= 0.05;
+		}
+		if(this.down.d){
+			this.r += 0.05;
+		}
 		if(this.hash === ownHash){
+			let prev = {
+				"x":offset.x,
+				"y":offset.y,
+				"z":offset.z,
+				"r":this.r
+			};
+
 			if(this.down.w || touch){
 				offset.x += cos(this.r) * s * speed;
 				offset.y += sin(this.r) * s * speed;
@@ -75,7 +104,17 @@ class Player {
 				offset.y -= sin(this.r) * s * speed;
 			}
 
-			if(!square_properties[getSquare()].clip){
+			let delta = {
+				"x" : offset.x - prev.x,
+				"y" : offset.y - prev.y,
+				"z" : offset.z - prev.z,
+				"r" : this.r - this.r,
+			};
+
+			var rs = getRelativeSquare();
+			var square = getSquare();
+
+			if(!square_properties[square].clip){
 				for(let i = 0; i < 10000 && !square_properties[getSquare()].clip; i++){
 					if(this.down.s){
 						offset.x += cos(this.r) * s * speed;
@@ -87,8 +126,52 @@ class Player {
 					}
 				}
 			}
+
+			if(square.startsWith("7_")){
+				switch(square){
+					case "7_n":
+						if(rs.y < 0.5 && rs.y > (0.5 -/**/ ((delta.y)/g)) && delta.y > 0){
+							offset.z++;
+						}
+						else if(rs.y > 0.5 && rs.y < (0.5 - ((delta.y)/g)) && delta.y < 0){
+							offset.z--;
+						}
+						break;
+					case "7_e":
+						if(rs.x > 0.5 && rs.x < (0.5 - ((delta.x)/g)) && delta.x < 0){
+							offset.z++;
+						}
+						else if(rs.x < 0.5 && rs.x > (0.5 -/**/ ((delta.x)/g)) && delta.x > 0){
+							offset.z--;
+						}
+						break;
+					case "7_s":
+						if(rs.y > 0.5 && rs.y < (0.5 - ((delta.y)/g)) &&  delta.y < 0){
+							offset.z++;
+						}
+						else if(rs.y < 0.5 && rs.y > (0.5 -/**/ ((delta.y)/g)) &&  delta.y > 0){
+							offset.z--;
+						}
+						break;
+					case "7_w":
+						if(rs.x < 0.5 && rs.x > (0.5 -/**/ ((delta.x)/g)) && delta.x > 0){
+							offset.z++;
+						}
+						else if(rs.x > 0.5 && rs.x < (0.5 - ((delta.x)/g)) && delta.x < 0){
+							offset.z--;
+						}
+						break;
+				}
+			}
 		}
 		else{
+			let prev = {
+				"x":this.x,
+				"y":this.y,
+				"z":this.z,
+				"r":this.r
+			};
+
 			if(this.down.w){
 				this.x -= cos(this.r) * s;
 				this.y -= sin(this.r) * s;
@@ -98,7 +181,16 @@ class Player {
 				this.y += sin(this.r) * s;
 			}
 
-			if(!square_properties[getSquare(this)].clip){
+			let delta = {
+				"x" : this.x - prev.x,
+				"y" : this.y - prev.y,
+				"z" : this.z - prev.z,
+				"r" : this.r - this.r,
+			};
+
+			var square = getSquare();
+
+			if(!square_properties[square].clip){
 				for(let i = 0; i < 10000 && !square_properties[getSquare(this)].clip; i++){
 					if(this.down.s){
 						this.x -= cos(this.r) * s;
@@ -111,12 +203,6 @@ class Player {
 				}
 			}
 		}
-		if(this.down.a){
-			this.r -= 0.05;
-		}
-		if(this.down.d){
-			this.r += 0.05;
-		}
 	}
 
 	addChat(text){
@@ -125,7 +211,7 @@ class Player {
 }
 
 function windowResized(){
-	resizeCanvas(window.innerWidth, window.innerHeight - 3);
+	resizeCanvas(window.innerWidth, window.innerHeight);
 }
 
 // A Recursive promise call to load images one at a time
@@ -302,17 +388,29 @@ function getSquare(p = undefined){
 	if(p === undefined){
 		let x = String(floor(((width / 2) - offset.x) / g));
 		let y = String(floor(((height / 2) - offset.y) / g));
+		let z = String(offset.z);
 		if(world[x] === undefined) return "0";
 		if(world[x][y] === undefined) return "0";
-		return world[x][y];
+		if(world[x][y][z] === undefined) return "0";
+		return world[x][y][z];
 	}
 	else{
 		let x = String(floor(p.x / g));
 		let y = String(floor(p.y / g));
+		let z = String(p.z);
 		if(world[x] === undefined) return "0";
 		if(world[x][y] === undefined) return "0";
-		return world[x][y];
+		if(world[x][y][z] === undefined) return "0";
+		return world[x][y][z];
 	}
+}
+
+function getRelativeSquare(){
+	return {
+		"x": abs((offset.x - (w/2)) % g) / g,
+		"y": abs((offset.y - (h/2)) % g) / g,
+		"z": offset.z
+	};
 }
 
 function playerMotion(){
@@ -323,7 +421,9 @@ function playerMotion(){
 
 function renderPlayers(){
 	Object.keys(players).forEach(hash => {
-		if(hash !== ownHash) players[hash].draw();
+		if(players[hash] === offset.z){
+			players[hash].draw();
+		}
 	});
 }
 
@@ -335,7 +435,7 @@ function renderWorld(){
 	for(let x = floor(-offset.x / g); x <= floor((width - offset.x) / g); x++){
 		for(let y = floor(-offset.y / g); y <= floor((height - offset.y) / g); y++){
 			if(world[x] !== undefined && world[x][y] !== undefined){
-				var prop = square_properties[world[x][y]];
+				var prop = square_properties[world[x][y][offset.z]];
 				switch(prop.render){
 					case "color":
 						fill(prop.image);
@@ -371,6 +471,8 @@ function renderHUD(){
 		stroke("black");
 		text("(T)alk",w - 30,h - 20);
 	}*/
+
+
 }
 
 function renderOverlays(){
@@ -426,9 +528,11 @@ function draw(){
 	renderSelf();
 	renderHUD();
 	renderOverlays()
+
 	//if(getSquare() == "6"){
 	//	ellipse(width/2,height/2,20);
 	//}
+
 	//if(mouseIsPressed) drawSquares();
 }
 
@@ -436,7 +540,8 @@ function drawSquares(){
 	//return;
 	let pos = {
 		"x": floor((mouseX - offset.x) / g),
-		"y": floor((mouseY - offset.y) / g)
+		"y": floor((mouseY - offset.y) / g),
+		"z": offset.z
 	};
 
 	if(
@@ -453,7 +558,12 @@ function drawSquares(){
 			for(let y = -brushsize; y <= brushsize; y++){
 				if(world[pos.x + x] !== undefined){
 					if(world[pos.x + x][pos.y + y] !== undefined){
-						delete world[pos.x + x][pos.y + y];
+						if(world[pos.x + x][pos.y + y][pos.z] !== undefined){
+							delete world[pos.x + x][pos.y + y][pos.z];
+						}
+						if(Object.keys(world[pos.x + x][pos.y + y]).length === 0){
+							delete world[pos.x + x][pos.y + y];
+						}
 					}
 					if(Object.keys(world[pos.x + x]).length === 0){
 						delete world[pos.x + x];
@@ -466,14 +576,17 @@ function drawSquares(){
 		for(let x = -brushsize; x <= brushsize; x++){
 			for(let y = -brushsize; y <= brushsize; y++){
 				if(world[pos.x + x] === undefined) world[pos.x + x] = {};
-				world[pos.x + x][pos.y + y] = col;
+				if(world[pos.x + x][pos.y + y] === undefined) world[pos.x + x][pos.y + y] = {};
+				world[pos.x + x][pos.y + y][pos.z] = col;
 			}
 		}
 	}
 }
 
 function mousePressed(){
-	//drawSquares();
+	// if(mouseX >= 0 && mouseX <= w && mouseY >= 0 && mouseY <= h){
+	// 	drawSquares();
+	// }
 }
 
 function keyPressed(){
@@ -512,6 +625,7 @@ function keyPressed(){
 }
 
 function keyReleased(){
+	//if(dialog.chat.active) return;
 	players[ownHash].down[key] = false;
 	socket.emit("player_key",{
 		"state":"up",
@@ -521,7 +635,6 @@ function keyReleased(){
 		"r":players[ownHash].r
 	},BROADCAST_EXCLUSIVE);
 }
-
 
 function mouseMoved(){}
 
