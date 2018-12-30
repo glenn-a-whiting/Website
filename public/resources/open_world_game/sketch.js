@@ -1,5 +1,5 @@
-var w = window.innerWidth - 10;
-var h = window.innerHeight - 20;
+var w = window.innerWidth;
+var h = window.innerHeight - 3;
 var start = {
 	"x":55,
 	"y":0
@@ -140,8 +140,8 @@ function preload(){
 			"clip":true
 		},
 		"2":{
-			"render":"image",
-			"image":loadImage("/resources/Open_World_Game/images/path.jpg"),
+			"render":"color",
+			"image":"lightgrey",
 			"clip":true
 		},
 		"3":{
@@ -150,18 +150,18 @@ function preload(){
 			"clip":true
 		},
 		"4":{
-			"render":"image",
-			"image": loadImage("/resources/Open_World_Game/images/grass.jpg"),
+			"render":"color",
+			"image":"green",
 			"clip":true
 		},
 		"5":{
-			"render":"image",
-			"image":loadImage("/resources/Open_World_Game/images/water.jpg"),
+			"render":"color",
+			"image":"blue",
 			"clip":true
 		},
 		"6":{
-			"render":"image",
-			"image":loadImage("/resources/Open_World_Game/images/brick.png"),
+			"render":"color",
+			"image":"orange",
 			"clip":false
 		},
 		undefined:{
@@ -170,13 +170,41 @@ function preload(){
 			"clip":true
 		}
 	};
+
+	loadImage("/resources/Open_World_Game/images/path_small.jpg",function(img){
+		square_properties["2"] = {
+			"render":"image",
+			"image":img,
+			"clip":true
+		};
+	});
+	loadImage("/resources/Open_World_Game/images/grass_small.jpg",function(img){
+		square_properties["4"] = {
+			"render":"image",
+			"image":img,
+			"clip":true
+		};
+	});
+	loadImage("/resources/Open_World_Game/images/water_small.jpg",function(img){
+		square_properties["5"] = {
+			"render":"image",
+			"image":img,
+			"clip":true
+		};
+	});
+	loadImage("/resources/Open_World_Game/images/brick_small.png",function(img){
+		square_properties["6"] = {
+			"render":"image",
+			"image":img,
+			"clip":false
+		};
+	});
 }
 
 function setup(){
 	createCanvas(w,h);
 	showTouchGuides = false;
 	col = "0";
-
 
 	border = {
 		"left": width * 0.25,

@@ -9,6 +9,7 @@
 		<script src="{{asset('resources/'.$page.'/websocket.js')}}"></script>
 		<script src="{{asset('resources/'.$page.'/sketch.js')}}"></script>
 		<script src="{{asset('resources/'.$page.'/script.js')}}"></script>
+		<link rel="stylesheet" type="text/css" href="{{asset('resources/'.$page.'/style.css')}}">
 	</head>
 	<body>
 	</body>
