@@ -124,7 +124,7 @@ class Player {
 }
 
 function windowResized(){
-	resizeCanvas(window.innerWidth - 10, window.innerHeight - 20);
+	resizeCanvas(window.innerWidth, window.innerHeight - 3);
 }
 
 function preload(){
@@ -177,27 +177,27 @@ function preload(){
 			"image":img,
 			"clip":true
 		};
-	});
-	loadImage("/resources/Open_World_Game/images/grass_small.jpg",function(img){
-		square_properties["4"] = {
-			"render":"image",
-			"image":img,
-			"clip":true
-		};
-	});
-	loadImage("/resources/Open_World_Game/images/water_small.jpg",function(img){
-		square_properties["5"] = {
-			"render":"image",
-			"image":img,
-			"clip":true
-		};
-	});
-	loadImage("/resources/Open_World_Game/images/brick_small.png",function(img){
-		square_properties["6"] = {
-			"render":"image",
-			"image":img,
-			"clip":false
-		};
+		loadImage("/resources/Open_World_Game/images/grass_small.jpg",function(img){
+			square_properties["4"] = {
+				"render":"image",
+				"image":img,
+				"clip":true
+			};
+			loadImage("/resources/Open_World_Game/images/water_small.jpg",function(img){
+				square_properties["5"] = {
+					"render":"image",
+					"image":img,
+					"clip":true
+				};
+				loadImage("/resources/Open_World_Game/images/brick_small.png",function(img){
+					square_properties["6"] = {
+						"render":"image",
+						"image":img,
+						"clip":false
+					};
+				});
+			});
+		});
 	});
 }
 
