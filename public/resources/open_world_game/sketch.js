@@ -421,7 +421,7 @@ function playerMotion(){
 
 function renderPlayers(){
 	Object.keys(players).forEach(hash => {
-		if(players[hash] === offset.z){
+		if(players[hash].z === offset.z){
 			players[hash].draw();
 		}
 	});
