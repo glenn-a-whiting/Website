@@ -14,6 +14,7 @@ var offset = {
 	"x": (w / 2) - (start.x * g),
 	"y": (h / 2) - (start.y * g)
 };
+var resourceLocation = "/resources/Open_World_Game/";
 
 class Player {
 	constructor(hash,x,y,r){
@@ -127,82 +128,118 @@ function windowResized(){
 	resizeCanvas(window.innerWidth, window.innerHeight - 3);
 }
 
+// A Recursive promise call to load images one at a time
+function loadImages(i=0){
+	return new Promise(function(resolve,reject){
+		if(i >= Object.keys(square_properties).length){
+			resolve("Loaded all images");
+			return;
+		}
+		var key = Object.keys(square_properties)[i];
+		var src = resourceLocation + "images/" + square_properties[key].source;
+		if(square_properties[key].source === null){
+			loadImages(i+1).then(function(msg){
+				resolve(msg);
+			}).catch(function(err){
+				reject(err);
+			});
+		}
+		else{
+			loadImage(src,function(img){
+				square_properties[key].image = img;
+				square_properties[key].render = "image";
+				loadImages(i+1).then(function(msg){
+					resolve(msg);
+				}).catch(function(err){
+					reject(err);
+				});
+			},function(err){
+				reject(err);
+			});
+		}
+	});
+}
+
 function preload(){
 	square_properties = {
 		"0":{
 			"render":"color",
 			"image":200,
+			"source":null,
 			"clip":true
 		},
 		"1":{
 			"render":"color",
 			"image":"white",
+			"source":null,
 			"clip":true
 		},
 		"2":{
 			"render":"color",
 			"image":"lightgrey",
+			"source":"path_small.jpg",
 			"clip":true
 		},
 		"3":{
 			"render":"color",
 			"image":"red",
+			"source":null,
 			"clip":true
 		},
 		"4":{
 			"render":"color",
 			"image":"green",
+			"source":"grass_small.jpg",
 			"clip":true
 		},
 		"5":{
 			"render":"color",
 			"image":"blue",
+			"source":"water_small.jpg",
 			"clip":true
 		},
 		"6":{
 			"render":"color",
 			"image":"orange",
+			"source":"brick_small.png",
 			"clip":false
+		},
+		"7_n":{
+			"render":"color",
+			"image":"saddlebrown",
+			"source":"stairs_small_n.png",
+			"clip":true
+		},
+		"7_e":{
+			"render":"color",
+			"image":"saddlebrown",
+			"source":"stairs_small_e.png",
+			"clip":true
+		},
+		"7_s":{
+			"render":"color",
+			"image":"saddlebrown",
+			"source":"stairs_small_s.png",
+			"clip":true
+		},
+		"7_w":{
+			"render":"color",
+			"image":"saddlebrown",
+			"source":"stairs_small_w.png",
+			"clip":true
 		},
 		undefined:{
 			"render":"color",
 			"image":200,
+			"source":null,
 			"clip":true
 		}
 	};
-
-	loadImage("/resources/Open_World_Game/images/path_small.jpg",function(img){
-		square_properties["2"] = {
-			"render":"image",
-			"image":img,
-			"clip":true
-		};
-		loadImage("/resources/Open_World_Game/images/grass_small.jpg",function(img){
-			square_properties["4"] = {
-				"render":"image",
-				"image":img,
-				"clip":true
-			};
-			loadImage("/resources/Open_World_Game/images/water_small.jpg",function(img){
-				square_properties["5"] = {
-					"render":"image",
-					"image":img,
-					"clip":true
-				};
-				loadImage("/resources/Open_World_Game/images/brick_small.png",function(img){
-					square_properties["6"] = {
-						"render":"image",
-						"image":img,
-						"clip":false
-					};
-				});
-			});
-		});
-	});
 }
 
 function setup(){
 	createCanvas(w,h);
+
 	showTouchGuides = false;
 	col = "0";
 
@@ -242,6 +279,12 @@ function setup(){
 
 	textSize(20);
 	brushsize = 0;
+
+	loadImages().then(function(msg){
+		console.log(msg);
+	}).catch(function(err){
+		console.log(err);
+	});
 }
 
 function renderBuild(){
@@ -374,26 +417,18 @@ function renderOverlays(){
 function draw(){
 	if(ownHash === undefined || world === undefined) return;
 	background(200);
-
 	playerMotion();
-
-
 	translate(offset.x,offset.y);
-
 	renderWorld();
 	renderPlayers();
-
 	translate(-offset.x,-offset.y);
-
 	//renderBuild();
 	renderSelf();
 	renderHUD();
 	renderOverlays()
-
 	//if(getSquare() == "6"){
 	//	ellipse(width/2,height/2,20);
 	//}
-
 	//if(mouseIsPressed) drawSquares();
 }
 
