@@ -29,11 +29,7 @@ class Player {
 			"w":false,
 			"s":false,
 			"a":false,
-			"d":false,
-			"ArrowUp":false,
-			"ArrowLeft":false,
-			"ArrowRight":false,
-			"ArrowDown":false
+			"d":false
 		};
 		this.touch = {
 			"center":false,
@@ -54,8 +50,9 @@ class Player {
 		}
 	}
 
-	draw(){
-		if(this.hash !== ownHash) fill("white");
+	draw(nofill = false){
+		if(nofill) noFill();
+		else if(this.hash !== ownHash) fill("white");
 		else fill("lightblue");
 		stroke("black");
 		let t1 = {
@@ -219,16 +216,25 @@ function windowResized(){
 }
 
 // A Recursive promise call to load images one at a time
-function loadImages(i=0){
+function loadImages(i=0,j=0){
 	return new Promise(function(resolve,reject){
-		if(i >= Object.keys(square_properties).length){
+		if(j >= Object.keys(tiles).length){
 			resolve("Loaded all images");
 			return;
 		}
-		var key = Object.keys(square_properties)[i];
-		var src = resourceLocation + "images/" + square_properties[key].source;
-		if(square_properties[key].source === null){
-			loadImages(i+1).then(function(msg){
+		if(i >= Object.keys(tiles[Object.keys(tiles)[j]]).length){
+			loadImages(0,j+1).then(function(msg){
+				resolve(msg);
+			}).catch(function(err){
+				reject(err);
+			});
+			return;
+		}
+		var kind = Object.keys(tiles)[j];
+		var key = Object.keys(tiles[kind])[i];
+		var src = resourceLocation + "images/" + tiles[kind][key].source;
+		if(tiles[kind][key].source === null){
+			loadImages(i+1,j).then(function(msg){
 				resolve(msg);
 			}).catch(function(err){
 				reject(err);
@@ -236,9 +242,9 @@ function loadImages(i=0){
 		}
 		else{
 			loadImage(src,function(img){
-				square_properties[key].image = img;
-				square_properties[key].render = "image";
-				loadImages(i+1).then(function(msg){
+				tiles[kind][key].image = img;
+				tiles[kind][key].render = "image";
+				loadImages(i+1,j).then(function(msg){
 					resolve(msg);
 				}).catch(function(err){
 					reject(err);
@@ -251,78 +257,77 @@ function loadImages(i=0){
 }
 
 function preload(){
-	square_properties = {
-		"0":{
-			"render":"color",
-			"image":200,
-			"source":null,
-			"clip":true
+	tiles = {
+		"floor":{
+			"0":{
+				"render":"color",
+				"image":200,
+				"source":null
+			},
+			"1":{
+				"render":"color",
+				"image":"white",
+				"source":null
+			},
+			"2":{
+				"render":"color",
+				"image":"lightgrey",
+				"source":"path_small.jpg"
+			},
+			"3":{
+				"render":"color",
+				"image":"red",
+				"source":null
+			},
+			"4":{
+				"render":"color",
+				"image":"green",
+				"source":"grass_small.jpg"
+			},
+			"5":{
+				"render":"color",
+				"image":"blue",
+				"source":"water_small.jpg"
+			},
+			"7_n":{
+				"render":"color",
+				"image":"saddlebrown",
+				"source":"stairs_small_n.png"
+			},
+			"7_e":{
+				"render":"color",
+				"image":"saddlebrown",
+				"source":"stairs_small_e.png"
+			},
+			"7_s":{
+				"render":"color",
+				"image":"saddlebrown",
+				"source":"stairs_small_s.png"
+			},
+			"7_w":{
+				"render":"color",
+				"image":"saddlebrown",
+				"source":"stairs_small_w.png"
+			},
+			undefined:{
+				"render":"color",
+				"image":200,
+				"source":null
+			}
 		},
-		"1":{
-			"render":"color",
-			"image":"white",
-			"source":null,
-			"clip":true
+		"roof":{
+			"8":{
+				"render":"color",
+				"image":"orange",
+				"source":"brick_small.png"
+			}
 		},
-		"2":{
-			"render":"color",
-			"image":"lightgrey",
-			"source":"path_small.jpg",
-			"clip":true
-		},
-		"3":{
-			"render":"color",
-			"image":"red",
-			"source":null,
-			"clip":true
-		},
-		"4":{
-			"render":"color",
-			"image":"green",
-			"source":"grass_small.jpg",
-			"clip":true
-		},
-		"5":{
-			"render":"color",
-			"image":"blue",
-			"source":"water_small.jpg",
-			"clip":true
-		},
-		"6":{
-			"render":"color",
-			"image":"orange",
-			"source":"brick_small.png",
-			"clip":false
-		},
-		"7_n":{
-			"render":"color",
-			"image":"saddlebrown",
-			"source":"stairs_small_n.png",
-			"clip":true
-		},
-		"7_e":{
-			"render":"color",
-			"image":"saddlebrown",
-			"source":"stairs_small_e.png",
-			"clip":true
-		},
-		"7_s":{
-			"render":"color",
-			"image":"saddlebrown",
-			"source":"stairs_small_s.png",
-			"clip":true
-		},
-		"7_w":{
-			"render":"color",
-			"image":"saddlebrown",
-			"source":"stairs_small_w.png",
-			"clip":true
-		},
-		undefined:{
-			"render":"color",
-			"image":200,
-			"source":null,
-			"clip":true
+		"walls":{ //any tile that is solid. All wall tiles are clip:false
+			"6":{
+				"render":"color",
+				"image":"orange",
+				"source":"brick_small.png"
+			}
 		}
 	};
 }
@@ -377,7 +382,7 @@ function setup(){
 	});
 }
 
-function renderBuild(){
+function renderGrid(){
 	stroke("black");
 	for(let x = offset.x % g; x <= width; x += g){
 		line(x,0,x,height);
@@ -423,35 +428,80 @@ function playerMotion(){
 	});
 }
 
-function renderPlayers(){
+function renderPlayers(nofill=false){
 	Object.keys(players).forEach(hash => {
-		if(players[hash].z === offset.z){
-			players[hash].draw();
+		if(players[hash] === offset.z){
+			players[hash].draw(nofill);
 		}
 	});
 }
 
-function renderSelf(){
-	players[ownHash].draw();
+function renderSelf(nofill=false){
+	players[ownHash].draw(nofill);
 }
 
-function renderWorld(){
+function renderFloor(){
 	for(let x = floor(-offset.x / g); x <= floor((width - offset.x) / g); x++){
 		for(let y = floor(-offset.y / g); y <= floor((height - offset.y) / g); y++){
 			if(world[x] !== undefined && world[x][y] !== undefined){
-				var prop = square_properties[world[x][y][offset.z]];
-				switch(prop.render){
-					case "color":
-						fill(prop.image);
-						stroke(prop.image);
-						rect(x*g,y*g,g,g);
-						break;
-					case "image":
-						image(prop.image,x*g,y*g,g,g);
-						break;
-				}
+				var key = world[x][y][offset.z];
+				if(tiles.floor[key] === undefined) continue;
+				var	prop = tiles.floor[key];
+				renderTile(x,y,prop);
 			}
 		}
+	}
+}
+
+function renderWalls(){
+	for(let x = floor(-offset.x / g); x <= floor((width - offset.x) / g); x++){
+		for(let y = floor(-offset.y / g); y <= floor((height - offset.y) / g); y++){
+			if(world[x] !== undefined && world[x][y] !== undefined){
+				var key = world[x][y][offset.z];
+				if(tiles.walls[key] === undefined) continue;
+				var	prop = tiles.walls[key];
+				renderTile(x,y,prop);
+			}
+		}
+	}
+}
+
+function renderRoof(){
+	for(let x = floor(-offset.x / g); x <= floor((width - offset.x) / g); x++){
+		for(let y = floor(-offset.y / g); y <= floor((height - offset.y) / g); y++){
+			if(world[x] !== undefined && world[x][y] !== undefined){
+				var key = world[x][y][offset.z];
+				if(tiles.roof[key] === undefined) continue;
+				var	prop = tiles.roof[key];
+				renderTile(x,y,prop);
+			}
+		}
+	}
+}
+
+function renderWorld(){
+	translate(offset.x,offset.y);
+	renderFloor();
+	renderPlayers();
+	translate(-offset.x,-offset.y);
+	renderSelf();
+	translate(offset.x,offset.y);
+	renderWalls();
+	renderRoof();
+	translate(-offset.x,-offset.y);
+	renderSelf(true);
+}
+
+function renderTile(x,y,prop){
+	switch(prop.render){
+		case "color":
+			fill(prop.image);
+			stroke(prop.image);
+			rect(x*g,y*g,g,g);
+			break;
+		case "image":
+			image(prop.image,x*g,y*g,g,g);
+			break;
 	}
 }
 
@@ -475,8 +525,6 @@ function renderHUD(){
 		stroke("black");
 		text("(T)alk",w - 30,h - 20);
 	}*/
-
-
 }
 
 function renderOverlays(){
@@ -524,24 +572,14 @@ function draw(){
 	if(ownHash === undefined || world === undefined) return;
 	background(200);
 	playerMotion();
-	translate(offset.x,offset.y);
 	renderWorld();
-	renderPlayers();
-	translate(-offset.x,-offset.y);
-	//renderBuild();
-	renderSelf();
+	//renderGrid();
 	renderHUD();
-	renderOverlays()
-
-	//if(getSquare() == "6"){
-	//	ellipse(width/2,height/2,20);
-	//}
-
+	renderOverlays();
 	//if(mouseIsPressed) drawSquares();
 }
 
 function drawSquares(){
-	//return;
 	let pos = {
 		"x": floor((mouseX - offset.x) / g),
 		"y": floor((mouseY - offset.y) / g),
@@ -643,6 +681,15 @@ function keyReleased(){
 function mouseMoved(){}
 
 function mouseDragged(){}
+
+// function mouseWheel(event){
+// 	if(event.delta > 0){
+// 		offset.z++;
+// 	}
+// 	else if(event.delta < 0){
+// 		offset.z--;
+// 	}
+// }
 
 function touchStarted(e){
 	showTouchGuides = true;
