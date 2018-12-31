@@ -130,32 +130,32 @@ class Player {
 
 			if(square.startsWith("7_")){
 				switch(square){
-					case "7_n":
-						if(rs.y < 0.5 && rs.y > (0.5 -/**/ ((delta.y)/g)) && delta.y > 0){
+					case "7_s":
+						if(rs.y < 0.5 && rs.y > (0.5 - ((delta.y)/g)) && delta.y > 0){
 							offset.z++;
 						}
 						else if(rs.y > 0.5 && rs.y < (0.5 - ((delta.y)/g)) && delta.y < 0){
 							offset.z--;
 						}
 						break;
-					case "7_e":
+					case "7_w":
 						if(rs.x > 0.5 && rs.x < (0.5 - ((delta.x)/g)) && delta.x < 0){
 							offset.z++;
 						}
-						else if(rs.x < 0.5 && rs.x > (0.5 -/**/ ((delta.x)/g)) && delta.x > 0){
+						else if(rs.x < 0.5 && rs.x > (0.5 - ((delta.x)/g)) && delta.x > 0){
 							offset.z--;
 						}
 						break;
-					case "7_s":
+					case "7_n":
 						if(rs.y > 0.5 && rs.y < (0.5 - ((delta.y)/g)) &&  delta.y < 0){
 							offset.z++;
 						}
-						else if(rs.y < 0.5 && rs.y > (0.5 -/**/ ((delta.y)/g)) &&  delta.y > 0){
+						else if(rs.y < 0.5 && rs.y > (0.5 - ((delta.y)/g)) &&  delta.y > 0){
 							offset.z--;
 						}
 						break;
-					case "7_w":
-						if(rs.x < 0.5 && rs.x > (0.5 -/**/ ((delta.x)/g)) && delta.x > 0){
+					case "7_e":
+						if(rs.x < 0.5 && rs.x > (0.5 - ((delta.x)/g)) && delta.x > 0){
 							offset.z++;
 						}
 						else if(rs.x > 0.5 && rs.x < (0.5 - ((delta.x)/g)) && delta.x < 0){
