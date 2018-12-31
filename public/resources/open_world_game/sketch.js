@@ -115,8 +115,8 @@ class Player {
 			var rs = getRelativeSquare();
 			var square = getSquare();
 
-			if(!square_properties[square].clip){
-				for(let i = 0; i < 10000 && !square_properties[getSquare()].clip; i++){
+			if(Object.keys(tiles.walls).some(k => k === square)){
+				for(let i = 0; i < 10000 && Object.keys(tiles.walls).some(k => k === getSquare()); i++){
 					if(this.down.s || this.down.ArrowDown){
 						offset.x += cos(this.r) * s * speed;
 						offset.y += sin(this.r) * s * speed;
@@ -189,10 +189,10 @@ class Player {
 				"r" : this.r - this.r,
 			};
 
-			var square = getSquare();
+			var square = getSquare(this);
 
-			if(!square_properties[square].clip){
-				for(let i = 0; i < 10000 && !square_properties[getSquare(this)].clip; i++){
+			if(Object.keys(tiles.walls).some(k => k === square)){
+				for(let i = 0; i < 10000 && Object.keys(tiles.walls).some(k => k === getSquare(this)); i++){
 					if(this.down.s || this.down.ArrowDown){
 						this.x -= cos(this.r) * s;
 						this.y -= sin(this.r) * s;
