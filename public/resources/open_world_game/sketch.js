@@ -7,6 +7,7 @@ var start = {
 var players = {};
 var ownHash;
 var world;
+var entities;
 var g = 64; //grid size
 var r = g * 0.25; //player radius
 var s = r * 0.5; //player speed
@@ -128,38 +129,47 @@ class Player {
 				}
 			}
 
+			let flag = false;
 			if(square.startsWith("7_")){
 				switch(square){
 					case "7_s":
 						if(rs.y < 0.5 && rs.y > (0.5 - ((delta.y)/g)) && delta.y > 0){
 							offset.z++;
+							flag = true;
 						}
 						else if(rs.y > 0.5 && rs.y < (0.5 - ((delta.y)/g)) && delta.y < 0){
 							offset.z--;
+							flag = true;
 						}
 						break;
 					case "7_w":
 						if(rs.x > 0.5 && rs.x < (0.5 - ((delta.x)/g)) && delta.x < 0){
 							offset.z++;
+							flag = true;
 						}
 						else if(rs.x < 0.5 && rs.x > (0.5 - ((delta.x)/g)) && delta.x > 0){
 							offset.z--;
+							flag = true;
 						}
 						break;
 					case "7_n":
 						if(rs.y > 0.5 && rs.y < (0.5 - ((delta.y)/g)) &&  delta.y < 0){
 							offset.z++;
+							flag = true;
 						}
 						else if(rs.y < 0.5 && rs.y > (0.5 - ((delta.y)/g)) &&  delta.y > 0){
 							offset.z--;
+							flag = true;
 						}
 						break;
 					case "7_e":
 						if(rs.x < 0.5 && rs.x > (0.5 - ((delta.x)/g)) && delta.x > 0){
 							offset.z++;
+							flag = true;
 						}
 						else if(rs.x > 0.5 && rs.x < (0.5 - ((delta.x)/g)) && delta.x < 0){
 							offset.z--;
+							flag = true;
 						}
 						break;
 				}
@@ -208,6 +218,70 @@ class Player {
 
 	addChat(text){
 		this.chat = {"content":text,"time":600};
+	}
+}
+
+class Entity {
+	constructor(type,x,y,z,indirect=false){
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.screen = {
+			"x": (this.x * g) + (g/2),
+			"y": (this.y * g) + (g/2)
+		};
+		this.type = type;
+		if(indirect){
+			switch(type){
+				case "chest": return new Chest(x,y,z);
+			}
+		}
+	}
+
+	serialize(){}
+	draw(){} // any special rendering we want to occur.
+	onclick(){}
+	locate(){
+		console.log("entities["+this.x+"]["+this.y+"]["+this.z+"]");
+	}
+}
+
+class Chest extends Entity {
+	constructor(x,y,z){
+		super("chest",x,y,z);
+		this.items = [];
+		this.dialog = {
+			"content":"This chest\nis empty.",
+			"active":false,
+			"timer":null
+		};
+	}
+
+	serialize(){
+		return {
+			"dialog":{
+				"content":"This chest\nis empty.",
+				"active":false,
+				"timer":null
+			}
+		};
+	}
+
+	onclick(){
+		this.dialog.active = true;
+		this.dialog.timer = setTimeout(function(self){
+			self.dialog.active = false;
+			self.timer = null;
+		},2000,this);
+	}
+
+	draw(){
+		if(this.dialog.active){
+			fill("black");
+			stroke("black");
+			textAlign(CENTER,CENTER);
+			text(this.dialog.content, this.screen.x, this.screen.y);
+		}
 	}
 }
 
@@ -262,71 +336,91 @@ function preload(){
 			"0":{
 				"render":"color",
 				"image":200,
-				"source":null
+				"source":null,
+				"onclick":function(x,y,z){}
 			},
 			"1":{
 				"render":"color",
 				"image":"white",
-				"source":null
+				"source":null,
+				"onclick":function(x,y,z){}
 			},
 			"2":{
 				"render":"color",
 				"image":"lightgrey",
-				"source":"path_small.jpg"
+				"source":"path_small.jpg",
+				"onclick":function(x,y,z){}
 			},
 			"3":{
 				"render":"color",
 				"image":"red",
-				"source":null
+				"source":null,
+				"onclick":function(x,y,z){}
 			},
 			"4":{
 				"render":"color",
 				"image":"green",
-				"source":"grass_small.jpg"
+				"source":"grass_small.jpg",
+				"onclick":function(x,y,z){}
 			},
 			"5":{
 				"render":"color",
 				"image":"blue",
-				"source":"water_small.jpg"
+				"source":"water_small.jpg",
+				"onclick":function(x,y,z){}
 			},
 			"7_n":{
 				"render":"color",
 				"image":"saddlebrown",
-				"source":"stairs_small_n.png"
+				"source":"stairs_small_n.png",
+				"onclick":function(x,y,z){}
 			},
 			"7_e":{
 				"render":"color",
 				"image":"saddlebrown",
-				"source":"stairs_small_e.png"
+				"source":"stairs_small_e.png",
+				"onclick":function(x,y,z){}
 			},
 			"7_s":{
 				"render":"color",
 				"image":"saddlebrown",
-				"source":"stairs_small_s.png"
+				"source":"stairs_small_s.png",
+				"onclick":function(x,y,z){}
 			},
 			"7_w":{
 				"render":"color",
 				"image":"saddlebrown",
-				"source":"stairs_small_w.png"
+				"source":"stairs_small_w.png",
+				"onclick":function(x,y,z){}
 			},
 			undefined:{
 				"render":"color",
 				"image":200,
-				"source":null
+				"source":null,
+				"onclick":function(x,y,z){}
 			}
 		},
 		"roof":{
 			"8":{
 				"render":"color",
 				"image":"orange",
-				"source":"brick_small.png"
+				"source":"brick_small.png",
+				"onclick":function(x,y,z){}
 			}
 		},
 		"walls":{ //any tile that is solid. All wall tiles are clip:false
 			"6":{
 				"render":"color",
 				"image":"orange",
-				"source":"brick_small.png"
+				"source":"brick_small.png",
+				"onclick":function(x,y,z){}
+			}
+		},
+		"entities":{
+			"chest":{
+				"render":"color",
+				"image":"brown",
+				"source":"chest.png"
 			}
 		}
 	};
@@ -376,7 +470,7 @@ function setup(){
 	brushsize = 0;
 
 	loadImages().then(function(msg){
-		console.log(msg);
+		//console.log(msg);
 	}).catch(function(err){
 		console.log(err);
 	});
@@ -401,7 +495,8 @@ function getSquare(p = undefined){
 		if(world[x] === undefined) return "0";
 		if(world[x][y] === undefined) return "0";
 		if(world[x][y][z] === undefined) return "0";
-		return world[x][y][z];
+		if(world[x][y][z][0] === undefined) return "0";
+		return world[x][y][z][0];
 	}
 	else{
 		let x = String(floor(p.x / g));
@@ -410,7 +505,8 @@ function getSquare(p = undefined){
 		if(world[x] === undefined) return "0";
 		if(world[x][y] === undefined) return "0";
 		if(world[x][y][z] === undefined) return "0";
-		return world[x][y][z];
+		if(world[x][y][z][0] === undefined) return "0";
+		return world[x][y][z][0];
 	}
 }
 
@@ -443,8 +539,8 @@ function renderSelf(nofill=false){
 function renderFloor(){
 	for(let x = floor(-offset.x / g); x <= floor((width - offset.x) / g); x++){
 		for(let y = floor(-offset.y / g); y <= floor((height - offset.y) / g); y++){
-			if(world[x] !== undefined && world[x][y] !== undefined){
-				var key = world[x][y][offset.z];
+			if(world[x] !== undefined && world[x][y] !== undefined && world[x][y][offset.z] !== undefined){
+				var key = world[x][y][offset.z][0];
 				if(tiles.floor[key] === undefined) continue;
 				var	prop = tiles.floor[key];
 				renderTile(x,y,prop);
@@ -456,8 +552,8 @@ function renderFloor(){
 function renderWalls(){
 	for(let x = floor(-offset.x / g); x <= floor((width - offset.x) / g); x++){
 		for(let y = floor(-offset.y / g); y <= floor((height - offset.y) / g); y++){
-			if(world[x] !== undefined && world[x][y] !== undefined){
-				var key = world[x][y][offset.z];
+			if(world[x] !== undefined && world[x][y] !== undefined && world[x][y][offset.z] !== undefined){
+				var key = world[x][y][offset.z][0];
 				if(tiles.walls[key] === undefined) continue;
 				var	prop = tiles.walls[key];
 				renderTile(x,y,prop);
@@ -469,11 +565,25 @@ function renderWalls(){
 function renderRoof(){
 	for(let x = floor(-offset.x / g); x <= floor((width - offset.x) / g); x++){
 		for(let y = floor(-offset.y / g); y <= floor((height - offset.y) / g); y++){
-			if(world[x] !== undefined && world[x][y] !== undefined){
-				var key = world[x][y][offset.z];
+			if(world[x] !== undefined && world[x][y] !== undefined && world[x][y][offset.z] !== undefined){
+				var key = world[x][y][offset.z][0];
 				if(tiles.roof[key] === undefined) continue;
 				var	prop = tiles.roof[key];
 				renderTile(x,y,prop);
+			}
+		}
+	}
+}
+
+function renderEntities(){
+	for(let x = floor(-offset.x / g); x <= floor((width - offset.x) / g); x++){
+		for(let y = floor(-offset.y / g); y <= floor((height - offset.y) / g); y++){
+			if(world[x] !== undefined && world[x][y] !== undefined && world[x][y][offset.z] !== undefined && world[x][y][offset.z][1] !== undefined){
+				var key = world[x][y][offset.z][1];
+				if(tiles.entities[key] === undefined) continue;
+				var	prop = tiles.entities[key];
+				renderTile(x,y,prop);
+				entities[x][y][offset.z].draw();
 			}
 		}
 	}
@@ -487,6 +597,7 @@ function renderWorld(){
 	renderSelf();
 	translate(offset.x,offset.y);
 	renderWalls();
+	renderEntities();
 	renderRoof();
 	translate(-offset.x,-offset.y);
 	renderSelf(true);
@@ -595,13 +706,17 @@ function drawSquares(){
 		return;
 	}
 
-	if(col == "0"){
+	if(Number(col) <= 0){
 		for(let x = -brushsize; x <= brushsize; x++){
 			for(let y = -brushsize; y <= brushsize; y++){
 				if(world[pos.x + x] !== undefined){
 					if(world[pos.x + x][pos.y + y] !== undefined){
 						if(world[pos.x + x][pos.y + y][pos.z] !== undefined){
-							delete world[pos.x + x][pos.y + y][pos.z];
+							if(col == "0") world[pos.x + x][pos.y + y][pos.z][0] = null
+							else world[pos.x + x][pos.y + y][pos.z][1] = null;
+							if(world[pos.x + x][pos.y + y][pos.z][0] == null && world[pos.x + x][pos.y + y][pos.z][1] == null){
+								delete world[pos.x + x][pos.y + y][pos.z];
+							}
 						}
 						if(Object.keys(world[pos.x + x][pos.y + y]).length === 0){
 							delete world[pos.x + x][pos.y + y];
@@ -617,18 +732,58 @@ function drawSquares(){
 	else{
 		for(let x = -brushsize; x <= brushsize; x++){
 			for(let y = -brushsize; y <= brushsize; y++){
-				if(world[pos.x + x] === undefined) world[pos.x + x] = {};
-				if(world[pos.x + x][pos.y + y] === undefined) world[pos.x + x][pos.y + y] = {};
-				world[pos.x + x][pos.y + y][pos.z] = col;
+				if(col.startsWith("#")){
+					if(entities[pos.x + x] === undefined) entities[pos.x + x] = {};
+					if(entities[pos.x + x][pos.y + y] === undefined) entities[pos.x + x][pos.y + y] = {};
+					world[pos.x + x][pos.y + y][pos.z][1] = col.substr(1);
+					entities[pos.x + x][pos.y + y][pos.z] = new Entity(col.substr(1),pos.x,pos.y,pos.z,true);
+				}
+				else{
+					if(world[pos.x + x] === undefined) world[pos.x + x] = {};
+					if(world[pos.x + x][pos.y + y] === undefined) world[pos.x + x][pos.y + y] = {};
+					if(world[pos.x + x][pos.y + y][pos.z] === undefined) world[pos.x + x][pos.y + y][pos.z] = [null,null];
+					world[pos.x + x][pos.y + y][pos.z][0] = col;
+				}
 			}
 		}
 	}
 }
 
 function mousePressed(){
-	// if(mouseX >= 0 && mouseX <= w && mouseY >= 0 && mouseY <= h){
-	// 	drawSquares();
+	let pos = {
+		"x": floor((mouseX - offset.x) / g),
+		"y": floor((mouseY - offset.y) / g),
+		"z": offset.z
+	};
+	// if(keyIsDown(16) && mouseX >= 0 && mouseX <= w && mouseY >= 0 && mouseY <= h){
+	//  	drawSquares();
+	// 	return;
 	// }
+	// if(keyIsDown(17)){
+	// 	if(entities[pos.x] !== undefined && entities[pos.x][pos.y] !== undefined && entities[pos.x][pos.y][pos.z] !== undefined){
+	// 		let entity = entities[pos.x][pos.y][pos.z];
+	// 		entity.locate();
+	// 	}
+	// 	return;
+	// }
+
+	if(world[pos.x] === undefined) return;
+	if(entities[pos.x] === undefined) return;
+	if(world[pos.x][pos.y] === undefined) return;
+	if(entities[pos.x][pos.y] === undefined) return;
+	if(world[pos.x][pos.y][pos.z] === undefined) return;
+	if(entities[pos.x][pos.y][pos.z] === undefined) return;
+	if(world[pos.x][pos.y][pos.z][0] == undefined) return;
+ 	let square = world[pos.x][pos.y][pos.z][0];
+	let entity = entities[pos.x][pos.y][pos.z];
+	Object.keys(tiles).some(type => {
+		if(tiles[type][square] !== undefined){
+			tiles[type][square].onclick(pos.x,pos.y,pos.z);
+			return true;
+		}
+		return false;
+	});
+	entity.onclick();
 }
 
 function keyPressed(){
@@ -662,6 +817,7 @@ function keyPressed(){
 		"key":key,
 		"x":players[ownHash].x - offset.x,
 		"y":players[ownHash].y - offset.y,
+		"z":offset.z,
 		"r":players[ownHash].r
 	},BROADCAST_EXCLUSIVE);
 }
@@ -674,22 +830,21 @@ function keyReleased(){
 		"key":key,
 		"x":players[ownHash].x - offset.x,
 		"y":players[ownHash].y - offset.y,
+		"z":offset.z,
 		"r":players[ownHash].r
 	},BROADCAST_EXCLUSIVE);
 }
 
-function mouseMoved(){}
-
 function mouseDragged(){}
 
-// function mouseWheel(event){
-// 	if(event.delta > 0){
-// 		offset.z++;
-// 	}
-// 	else if(event.delta < 0){
-// 		offset.z--;
-// 	}
-// }
+function mouseWheel(event){
+	if(event.delta > 0){
+		offset.z++;
+	}
+	else if(event.delta < 0){
+		offset.z--;
+	}
+}
 
 function touchStarted(e){
 	showTouchGuides = true;

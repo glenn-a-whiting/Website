@@ -53,10 +53,6 @@ $(document).ready(function(){
 		col = $(this).val();
 	});
 
-	$("#print").click(function(){
-		$("#p").html(JSON.stringify(world));
-	});
-
 	$("#brushsize").on("input",function(){
 		var newval = $("#brushsize").val();
 		if(newval < 0) $("#brushsize").val(0);
@@ -75,9 +71,27 @@ $(document).ready(function(){
 
 	$.ajax({
 		type: "GET",
-		url: "./resources/Open_World_Game/world.json",
-		success:function(data){
+		url: "/resources/Open_World_Game/world.json",
+		success: function(data){
 			world = data.world;
+			$.ajax({
+				type: "GET",
+				url: "/resources/Open_World_Game/entities.json",
+				success: function(data){
+					entities = {};
+					console.log(data);
+					data.forEach(e => {
+						if(entities[e.x] === undefined)
+							entities[e.x] = {};
+						if(entities[e.x][e.y] === undefined)
+							entities[e.x][e.y] = {};
+						entities[e.x][e.y][e.z] = new Entity(e.type,e.x,e.y,e.z,true);
+						Object.keys(e).forEach(k => {
+							entities[e.x][e.y][e.z][k] = e[k];
+						});
+					});
+				}
+			});
 		}
 	});
 });
