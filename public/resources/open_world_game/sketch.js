@@ -838,12 +838,12 @@ function keyReleased(){
 function mouseDragged(){}
 
 function mouseWheel(event){
-	if(event.delta > 0){
-		offset.z++;
-	}
-	else if(event.delta < 0){
-		offset.z--;
-	}
+	// if(event.delta > 0){
+	// 	offset.z++;
+	// }
+	// else if(event.delta < 0){
+	// 	offset.z--;
+	// }
 }
 
 function touchStarted(e){
